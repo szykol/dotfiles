@@ -42,7 +42,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty # i3-sensible-terminal
+bindsym $mod+Return exec termite # i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -174,5 +174,42 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+#---( windows rules )---#
+
+# No border windows
+for_window [class="(?i)terminator"] border none 
+for_window [class="(?i)terminology"] border none 
+for_window [class="(?i)dwb"] border none 
+for_window [class="(?i)luakit"] border none 
+for_window [class="(?i)rambox"] border none 
+for_window [class="(?i)franz"] border none 
+for_window [class="(?i)firefox"] border none
+for_window [class="(?i)iceweasel"] border none 
+for_window [class="(?i)jetbrains"] border none
+for_window [class="(?i)kontact"] border none
+for_window [class="(?i)kmail"] border none
+#for_window [class="(?i)emacs"] border none
+for_window [class="(?i)chrom"] border none
+for_window [class="(?i)gvim"] border none
+for_window [class="(?i)vivaldi"] border none
+
+# Float by name
+for_window [title="Nitrogen"] floating enable
+for_window [title="Install user style"] floating enable
+for_window [title="KCalc"] floating enable
+for_window [class="plasmashell"] floating enable
+
+
+# Float by type
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
                                         # chmod +x polybar.sh
 exec_always --no-startup-id ~/.config/i3/polybar.sh &
+
+for_window [class=".*"] border pixel 0
+
+gaps inner 15
+gaps outer 5
