@@ -207,8 +207,9 @@ for_window [window_role="task_dialog"] floating enable
 for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] floating enable
                                         # chmod +x polybar.sh
+exec --no-startup-id compton &
 exec_always --no-startup-id ~/.config/i3/polybar.sh &
-
+exec --no-startup-id feh --bg-scale ~/Downloads/walp.jpg
 for_window [class=".*"] border pixel 0
 
 gaps inner 15
