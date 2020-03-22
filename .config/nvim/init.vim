@@ -42,11 +42,16 @@ call plug#begin()
     Plug 'ryanoasis/vim-devicons'
     Plug 'airblade/vim-gitgutter'
     Plug 'scrooloose/nerdcommenter'
+    Plug 'yuttie/comfortable-motion.vim'
+    Plug 'rafi/awesome-vim-colorschemes'
 call plug#end()
 
 nmap <C-b> :NERDTreeToggle<CR>
+nmap <silent> <C-e> :bp<CR>
+nmap <silent> <C-r> :bn<CR>
 vmap ++ <plug>NERDCommenterToggle
 nmap ++ <plug>NERDCommenterToggle
+set fillchars=""
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
@@ -78,8 +83,13 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
 let g:NERDTreeGitStatusWithFlags = 1
-
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_powerline_fonts = 1
 let g:airline_theme='deus'
+
+colorscheme onedark
+
 set hidden
 set nobackup
 set nowritebackup
@@ -91,10 +101,10 @@ let g:coc_global_extensions = [
 \ 'coc-eslint', 
 \ 'coc-prettier', 
 \ 'coc-json',
-\ 'coc-python'
+\ 'coc-python',
 \ ]
 
-
+set signcolumn=yes
 inoremap <silent><expr> <c-space> coc#refresh()
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
