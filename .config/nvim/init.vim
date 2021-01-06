@@ -8,7 +8,6 @@ Plug 'tpope/vim-commentary'
 Plug 'sainnhe/edge'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'mizlan/termbufm'
-Plug 'mhinz/vim-signify'
 Plug 'SirVer/ultisnips'
 Plug 'lifepillar/gruvbox8'
 
@@ -16,21 +15,25 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
-set ts=2 sts=2 sw=2 et list lcs=tab:┆·,trail:·,precedes:,extends:
+filetype plugin indent on
+set cc=120
+set ts=4 sw=4 sts=4 et nolist lcs=eol:↵,trail:~,tab:>-,nbsp:␣,space:·
 set hid nowrap spr sb ic scs nu rnu tgc nosmd swb=useopen scl=yes nosc noru icm=split
 set udir=$HOME/.local/share/nvim/undodir udf
 set cot=menuone,noinsert,noselect shm+=c
 set bg=dark
+set updatetime=1000
+
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 colo gruvbox8
-
 let g:completion_confirm_key = "\<C-y>"
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
@@ -40,16 +43,32 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_powerline_fonts = 1
 let g:airline_theme='deus'
 
+let g:gitgutter_sign_added = '+'
+let g:gitgutter_sign_modified = '~'
+let g:gitgutter_sign_removed = '-'
+let g:gitgutter_sign_removed_first_line = '^'
+let g:gitgutter_sign_modified_removed = '<'
+
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
 :lua << EOF
   local nvim_lsp = require("lspconfig")
   local on_attach = function(_, bufnr)
   require('completion').on_attach()
+  local opts = { noremap=true, silent=true }
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
   end
-  local servers = {'pyls_ms', 'vimls', 'clangd'}
+  local servers = {'pyls_ms', 'vimls', 'clangd', 'texlab'}
   for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
+      nvim_lsp[lsp].setup {
       on_attach = on_attach,
     }
   end
@@ -91,3 +110,6 @@ nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>e :bn<CR>
 nnoremap <silent> <leader>q :bp<CR>
 nnoremap <silent> <leader>w :bd<CR>
+nnoremap <silent> <leader>s :set list!<CR>
+
+autocmd BufWritePost *.tex :TexlabBuild
