@@ -9,7 +9,7 @@ Plug 'sainnhe/edge'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'mizlan/termbufm'
 Plug 'SirVer/ultisnips'
-Plug 'lifepillar/gruvbox8'
+Plug 'gruvbox-community/gruvbox'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -19,6 +19,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 call plug#end()
 
@@ -29,12 +30,23 @@ set hid nowrap spr sb ic scs nu rnu tgc nosmd swb=useopen scl=yes nosc noru icm=
 set udir=$HOME/.local/share/nvim/undodir udf
 set cot=menuone,noinsert,noselect shm+=c
 set bg=dark
-set updatetime=1000
-
+set updatetime=500
+set scrolloff=8
+set guicursor=
+set termguicolors
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
-colo gruvbox8
+let g:gruvbox_contrast_dark = 'hard'
+
+colo gruvbox
+highlight Normal guibg=none
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 let g:completion_confirm_key = "\<C-y>"
+let g:completion_enable_snippet = 'UltiSnips'
+
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
 
@@ -64,7 +76,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   end
   local servers = {'pyls_ms', 'vimls', 'clangd', 'texlab'}
   for _, lsp in ipairs(servers) do
@@ -111,5 +123,21 @@ nnoremap <silent> <leader>e :bn<CR>
 nnoremap <silent> <leader>q :bp<CR>
 nnoremap <silent> <leader>w :bd<CR>
 nnoremap <silent> <leader>s :set list!<CR>
+nnoremap <silent> <leader>o o<CR><Up>
+nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gc :Gcommit<CR>
+nnoremap <silent> <leader>gn :GitGutterNextHunk<CR>
+nnoremap <silent> <leader>gp :GitGutterPrevHunk<CR>
+vnoremap <leader>p "_dP
 
-autocmd BufWritePost *.tex :TexlabBuild
+fun! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfun
+
+augroup SZYKOL
+    autocmd!
+    autocmd BufWritePost *.tex :TexlabBuild
+    autocmd BufWritePre * :call TrimWhitespace()
+augroup END
