@@ -14,12 +14,14 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
-Plug 'airblade/vim-gitgutter'
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
 
 call plug#end()
 
@@ -32,11 +34,17 @@ set cot=menuone,noinsert,noselect shm+=c
 set bg=dark
 set updatetime=500
 set scrolloff=8
-set guicursor=
+set guicursor=n-v-c:block-Cursor
 set termguicolors
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
+
+if argv(0) ==# '.'
+    let g:netrw_browse_split = 0
+else
+    let g:netrw_browse_split = 4
+endif
 
 colo gruvbox
 highlight Normal guibg=none
@@ -55,11 +63,9 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_powerline_fonts = 1
 let g:airline_theme='deus'
 
-let g:gitgutter_sign_added = '+'
-let g:gitgutter_sign_modified = '~'
-let g:gitgutter_sign_removed = '-'
-let g:gitgutter_sign_removed_first_line = '^'
-let g:gitgutter_sign_modified_removed = '<'
+" let g:netrw_browse_split = 2
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
@@ -78,7 +84,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   end
-  local servers = {'pyls_ms', 'vimls', 'clangd', 'texlab'}
+  local servers = {'pyls_ms', 'vimls', 'clangd', 'texlab', 'tsserver' }
   for _, lsp in ipairs(servers) do
       nvim_lsp[lsp].setup {
       on_attach = on_attach,
@@ -107,6 +113,20 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 EOF
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
+:lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "cpp", "bash", "python", "typescript", "javascript" },
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+  },
+}
+EOF
+
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
+
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
 tno <silent> <Esc> <C-\><C-n>
@@ -128,7 +148,26 @@ nnoremap <silent> <leader>gs :Gstatus<CR>
 nnoremap <silent> <leader>gc :Gcommit<CR>
 nnoremap <silent> <leader>gn :GitGutterNextHunk<CR>
 nnoremap <silent> <leader>gp :GitGutterPrevHunk<CR>
+nnoremap <silent> <leader>m :MaximizerToggle!<CR>
+nnoremap <silent> <leader>dd :call vimspector#Launch()<CR>
+
+nmap <silent> <leader>dl <Plug>VimspectorStepInto
+nmap <silent> <leader>dj <Plug>VimspectorStepOver
+nmap <silent> <leader>dk <Plug>VimspectorStepOut
+nmap <silent> <leader>d_ <Plug>VimspectorRestart
+nmap <silent> <leader>dbp <Plug>VimspectorToggleBreakpoint
+nmap <silent> <leader>de <Plug>VimspectorReset
+nnoremap <silent> <leader>dg :call vimspector#Continue()<CR>
+
 vnoremap <leader>p "_dP
+
+nnoremap <silent> <leader>h :wincmd h<CR>
+nnoremap <silent> <leader>l :wincmd l<CR>
+nnoremap <silent> <leader>j :wincmd j<CR>
+nnoremap <silent> <leader>k :wincmd k<CR>
+nnoremap <silent> <leader>t :Lex <bar> :vertical resize 30<CR>
+nnoremap <silent> <leader>+ :vertical resize +5<CR>
+nnoremap <silent> <leader>- :vertical resize -5<CR>
 
 fun! TrimWhitespace()
     let l:save = winsaveview()
