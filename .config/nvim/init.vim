@@ -40,19 +40,10 @@ let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 
-if argv(0) ==# '.'
-    let g:netrw_browse_split = 0
-else
-    let g:netrw_browse_split = 4
-endif
-
 colo gruvbox
 highlight Normal guibg=none
 
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-let g:completion_confirm_key = "\<C-y>"
+" let g:completion_confirm_key = "\<C-y>"
 let g:completion_enable_snippet = 'UltiSnips'
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
@@ -63,9 +54,15 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_powerline_fonts = 1
 let g:airline_theme='deus'
 
-" let g:netrw_browse_split = 2
+if argv(0) ==# '.'
+    let g:netrw_browse_split = 0
+else
+    let g:netrw_browse_split = 4
+endif
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
+
+let g:signify_sign_change = '~'
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
