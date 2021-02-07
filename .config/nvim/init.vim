@@ -11,18 +11,21 @@ Plug 'mizlan/termbufm'
 Plug 'SirVer/ultisnips'
 Plug 'gruvbox-community/gruvbox'
 
-Plug 'vim-airline/vim-airline'
+" Plug 'hoob3rt/lualine.nvim'
+Plug 'itchyny/lightline.vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
+" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 
 filetype plugin indent on
@@ -41,18 +44,12 @@ let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 
 colo gruvbox
-highlight Normal guibg=none
+" highlight Normal guibg=none
 
-" let g:completion_confirm_key = "\<C-y>"
-let g:completion_enable_snippet = 'UltiSnips'
-
+" let g:completion_enable_snippet = 'UltiSnips'
+let g:completion_enable_auto_paren = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_powerline_fonts = 1
-let g:airline_theme='deus'
 
 if argv(0) ==# '.'
     let g:netrw_browse_split = 0
@@ -63,6 +60,16 @@ let g:netrw_banner = 0
 let g:netrw_winsize = 25
 
 let g:signify_sign_change = '~'
+
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
@@ -75,7 +82,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
@@ -120,6 +127,30 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
+" :lua <<EOF
+"   local lualine = require('lualine')
+"   lualine.theme = 'powerline_szykol'
+"   -- lualine.extensions = { 'signify' }
+"   lualine.status()
+" EOF
+
+:lua <<EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        -- To disable a keymap, put [map] = false
+        -- ["<c-x>"] = false,
+        -- Otherwise, just set the mapping to the function that you want it to be.
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
+      },
+    },
+  }
+}
+EOF
+
 if executable('rg')
     let g:rg_derive_root='true'
 endif
@@ -133,9 +164,13 @@ nn <silent> <leader>k :lua vim.lsp.diagnostic.goto_prev()<CR>
 " moving cursor on wrapped lines
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
-nnoremap <silent> <leader>f :Files<CR>
-nnoremap <silent> <leader>r :Rg<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
+
+nnoremap <silent> <leader>F <cmd>Telescope find_files<cr>
+nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
+nnoremap <silent> <leader>r <cmd>Telescope live_grep<cr>
+nnoremap <silent> <leader>b <cmd>Telescope buffers<cr>
+nnoremap <silent> <leader>y <cmd>Telescope help_tags<cr>
+
 nnoremap <silent> <leader>e :bn<CR>
 nnoremap <silent> <leader>q :bp<CR>
 nnoremap <silent> <leader>w :bd<CR>
@@ -162,7 +197,12 @@ nnoremap <silent> <leader>h :wincmd h<CR>
 nnoremap <silent> <leader>l :wincmd l<CR>
 nnoremap <silent> <leader>j :wincmd j<CR>
 nnoremap <silent> <leader>k :wincmd k<CR>
+
+inoremap <expr> <C-j> "\<C-n>"
+inoremap <expr> <C-k> "\<C-p>"
+
 nnoremap <silent> <leader>t :Lex <bar> :vertical resize 30<CR>
+nnoremap <silent> <leader>T :sp<bar>term<CR> :resize 7<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
 
@@ -176,4 +216,5 @@ augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
     autocmd BufWritePre * :call TrimWhitespace()
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
