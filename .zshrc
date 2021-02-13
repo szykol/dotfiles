@@ -1,16 +1,9 @@
-cd ~
-autoload -U colors && colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+export ZSH="/home/szykol/.oh-my-zsh"
 
-# History in cache directory:
-HISTSIZE=10000
-SAVEHIST=10000
-HISTFILE=~/.zsh_hist
+ZSH_THEME="robbyrussell"
 
-# Basic auto/tab complete:
-autoload -U compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-compinit
-_comp_options+=(globdots)
-source /var/users/szykol/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+plugins=(git zsh-syntax-highlighting)
+
+source $ZSH/oh-my-zsh.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
