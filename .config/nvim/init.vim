@@ -11,17 +11,17 @@ Plug 'mizlan/termbufm'
 Plug 'SirVer/ultisnips'
 Plug 'gruvbox-community/gruvbox'
 
-" Plug 'hoob3rt/lualine.nvim'
-Plug 'itchyny/lightline.vim'
+" Plug 'kyazdani42/nvim-web-devicons'
+" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+Plug 'romgrk/barbar.nvim'
+Plug 'tjdevries/express_line.nvim'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'ryanoasis/vim-devicons'
 Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
-" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -39,6 +39,9 @@ set updatetime=500
 set scrolloff=8
 set guicursor=n-v-c:block-Cursor
 set termguicolors
+set mouse=a
+set nohlsearch
+
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
@@ -61,15 +64,10 @@ let g:netrw_winsize = 25
 
 let g:signify_sign_change = '~'
 
-let g:lightline = {
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead'
-      \ },
-      \ }
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.icons = v:false
+let bufferline.animation = v:false
+let bufferline.closable = v:false
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
@@ -127,12 +125,9 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-" :lua <<EOF
-"   local lualine = require('lualine')
-"   lualine.theme = 'powerline_szykol'
-"   -- lualine.extensions = { 'signify' }
-"   lualine.status()
-" EOF
+:lua <<EOF
+  require('el').setup {}
+EOF
 
 :lua <<EOF
 local actions = require('telescope.actions')
@@ -151,9 +146,9 @@ require('telescope').setup{
 }
 EOF
 
-if executable('rg')
-    let g:rg_derive_root='true'
-endif
+" if executable('rg')
+"     let g:rg_derive_root='true'
+" endif
 
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
@@ -162,12 +157,12 @@ nn <silent> <leader>j :lua vim.lsp.diagnostic.goto_next()<CR>
 nn <silent> <leader>k :lua vim.lsp.diagnostic.goto_prev()<CR>
 
 " moving cursor on wrapped lines
-noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
-noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
+" noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
+" noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
 nnoremap <silent> <leader>F <cmd>Telescope find_files<cr>
 nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
-nnoremap <silent> <leader>r <cmd>Telescope live_grep<cr>
+nnoremap <silent> <leader>rg <cmd>Telescope grep_string<cr>
 nnoremap <silent> <leader>b <cmd>Telescope buffers<cr>
 nnoremap <silent> <leader>y <cmd>Telescope help_tags<cr>
 
@@ -215,6 +210,6 @@ endfun
 augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
-    autocmd BufWritePre * :call TrimWhitespace()
+    " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
