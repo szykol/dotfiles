@@ -126,10 +126,6 @@ require'nvim-treesitter.configs'.setup {
 EOF
 
 :lua <<EOF
-  require('el').setup {}
-EOF
-
-:lua <<EOF
 local actions = require('telescope.actions')
 require('telescope').setup{
   defaults = {
