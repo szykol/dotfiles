@@ -13,10 +13,10 @@ Plug 'gruvbox-community/gruvbox'
 
 " Plug 'kyazdani42/nvim-web-devicons'
 " Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+" Plug 'tjdevries/express_line.nvim'
 Plug 'romgrk/barbar.nvim'
-Plug 'tjdevries/express_line.nvim'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'mhinz/vim-signify'
+Plug 'szykol/statusline.nvim'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -47,9 +47,11 @@ let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 
 colo gruvbox
-" highlight Normal guibg=none
 
-" let g:completion_enable_snippet = 'UltiSnips'
+highlight DiffAdd    ctermfg=114 guifg=#98c379 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
+highlight DiffChange ctermfg=180 guifg=#e5c07b cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
+highlight DiffDelete ctermfg=180 guifg=#BE0F34 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
+
 let g:completion_enable_auto_paren = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
@@ -61,8 +63,6 @@ else
 endif
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
-
-let g:signify_sign_change = '~'
 
 let bufferline = get(g:, 'bufferline', {})
 let bufferline.icons = v:false
@@ -146,9 +146,17 @@ require('telescope').setup{
 }
 EOF
 
-" if executable('rg')
-"     let g:rg_derive_root='true'
-" endif
+:lua <<EOF
+  require('gitsigns').setup {
+  signs = {
+        add          = {hl = 'DiffAdd'   , text = '│', numhl='GitSignsAddNr'},
+        change       = {hl = 'DiffChange', text = '│', numhl='GitSignsChangeNr'},
+        delete       = {hl = 'DiffDelete', text = '│', numhl='GitSignsDeleteNr'},
+        topdelete    = {hl = 'DiffDelete', text = '‾', numhl='GitSignsDeleteNr'},
+        changedelete = {hl = 'DiffChange', text = '│', numhl='GitSignsChangeNr'},
+    },
+  }
+EOF
 
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
@@ -172,7 +180,7 @@ nnoremap <silent> <leader>w :bd<CR>
 nnoremap <silent> <leader>s :set list!<CR>
 nnoremap <silent> <leader>o o<CR><Up>
 nnoremap <silent> <leader>gs :Gstatus<CR>
-nnoremap <silent> <leader>gc :Gcommit<CR>
+nnoremap <silent> <leader>gc :Git commit<CR>
 nnoremap <silent> <leader>gn :GitGutterNextHunk<CR>
 nnoremap <silent> <leader>gp :GitGutterPrevHunk<CR>
 nnoremap <silent> <leader>m :MaximizerToggle!<CR>
