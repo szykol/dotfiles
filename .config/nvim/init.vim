@@ -30,7 +30,10 @@ call plug#end()
 
 filetype plugin indent on
 set cc=120
-set ts=4 sw=4 sts=4 et nolist lcs=eol:↵,trail:~,tab:>-,nbsp:␣,space:·
+set ts=4 sw=4 sts=4 et list
+" set lcs=eol:↵,trail:.,tab:>-,nbsp:␣,space:·
+" set lcs=trail:.,tab:>-,eol:↵
+set lcs=trail:.,tab:>-
 set hid nowrap spr sb ic scs nu rnu tgc nosmd swb=useopen scl=yes nosc noru icm=split
 set udir=$HOME/.local/share/nvim/undodir udf
 set cot=menuone,noinsert,noselect shm+=c
@@ -92,9 +95,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
       on_attach = on_attach,
     }
   end
-EOF
 
-:lua << EOF
 local system_name
 if vim.fn.has("mac") == 1 then
   system_name = "macOS"
@@ -112,6 +113,7 @@ local sumneko_root_path = home .. '/dev/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
 
 require'lspconfig'.sumneko_lua.setup {
+  on_attach = on_attach,
   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
   settings = {
     Lua = {
@@ -163,7 +165,7 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = { "cpp", "bash", "python", "typescript", "javascript" },
   highlight = {
     enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
+    -- disable = { "c", "rust" },  -- list of language that will be disabled
   },
 }
 EOF
