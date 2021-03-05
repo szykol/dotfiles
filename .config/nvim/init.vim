@@ -2,18 +2,14 @@ call plug#begin(stdpath('data') . '/vim-plug')
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'honza/vim-snippets'
 Plug '9mm/vim-closer'
 Plug 'tpope/vim-commentary'
 Plug 'sainnhe/edge'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'mizlan/termbufm'
-Plug 'SirVer/ultisnips'
 Plug 'gruvbox-community/gruvbox'
 
-" Plug 'kyazdani42/nvim-web-devicons'
-" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
-" Plug 'tjdevries/express_line.nvim'
+Plug 'arcticicestudio/nord-vim'
 Plug 'romgrk/barbar.nvim'
 Plug 'szykol/statusline.nvim'
 Plug 'lewis6991/gitsigns.nvim'
@@ -31,8 +27,6 @@ call plug#end()
 filetype plugin indent on
 set cc=120
 set ts=4 sw=4 sts=4 et list
-" set lcs=eol:↵,trail:.,tab:>-,nbsp:␣,space:·
-" set lcs=trail:.,tab:>-,eol:↵
 set lcs=trail:.,tab:>-
 set hid nowrap spr sb ic scs nu rnu tgc nosmd swb=useopen scl=yes nosc noru icm=split
 set udir=$HOME/.local/share/nvim/undodir udf
@@ -49,11 +43,11 @@ let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 
-colo gruvbox
-
+colo nord
 highlight DiffAdd    ctermfg=114 guifg=#98c379 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
 highlight DiffChange ctermfg=180 guifg=#e5c07b cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
 highlight DiffDelete ctermfg=180 guifg=#BE0F34 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
+highlight Normal guibg=#1e2127
 
 let g:completion_enable_auto_paren = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
@@ -89,7 +83,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   end
-  local servers = {'pyright', 'vimls', 'clangd', 'texlab', 'tsserver' }
+  local servers = {'pyright', 'vimls', 'rust_analyzer', 'clangd', 'texlab', 'tsserver' }
   for _, lsp in ipairs(servers) do
       nvim_lsp[lsp].setup {
       on_attach = on_attach,
