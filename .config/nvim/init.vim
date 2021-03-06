@@ -202,7 +202,7 @@ nn <silent> <leader>k :lua vim.lsp.diagnostic.goto_prev()<CR>
 " moving cursor on wrapped lines
 " noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 " noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
-
+noremap <C-c> <c-[>
 nnoremap <silent> <leader>F <cmd>Telescope find_files<cr>
 nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
 nnoremap <silent> <leader>rg <cmd>Telescope grep_string<cr>
