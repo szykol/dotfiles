@@ -10,6 +10,7 @@ Plug 'mizlan/termbufm'
 Plug 'gruvbox-community/gruvbox'
 
 Plug 'arcticicestudio/nord-vim'
+Plug 'glepnir/zephyr-nvim'
 Plug 'romgrk/barbar.nvim'
 Plug 'szykol/statusline.nvim'
 Plug 'lewis6991/gitsigns.nvim'
@@ -43,11 +44,13 @@ let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 
-colo nord
+colo zephyr
 highlight DiffAdd    ctermfg=114 guifg=#98c379 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
 highlight DiffChange ctermfg=180 guifg=#e5c07b cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
 highlight DiffDelete ctermfg=180 guifg=#BE0F34 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
 highlight Normal guibg=#1e2127
+highlight ColorColumn ctermbg=237 guibg=#3c3836
+highlight SignColumn ctermbg=237 guibg=#3c3836
 
 let g:completion_enable_auto_paren = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
