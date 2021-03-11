@@ -10,10 +10,12 @@ Plug 'mizlan/termbufm'
 Plug 'gruvbox-community/gruvbox'
 
 Plug 'arcticicestudio/nord-vim'
+Plug 'embark-theme/vim', { 'as': 'embark' }
+Plug 'mhartington/oceanic-next'
 Plug 'glepnir/zephyr-nvim'
 Plug 'romgrk/barbar.nvim'
 Plug 'szykol/statusline.nvim'
-Plug 'lewis6991/gitsigns.nvim'
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -35,7 +37,6 @@ set cot=menuone,noinsert,noselect shm+=c
 set bg=dark
 set updatetime=500
 set scrolloff=8
-set guicursor=n-v-c:block-Cursor
 set termguicolors
 set mouse=a
 set nohlsearch
@@ -43,16 +44,10 @@ set nohlsearch
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
+let g:edge_style = 'neon'
 
-colo zephyr
-highlight DiffAdd    ctermfg=114 guifg=#98c379 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
-highlight DiffChange ctermfg=180 guifg=#e5c07b cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
-highlight DiffDelete ctermfg=180 guifg=#BE0F34 cterm=none gui=none guibg=none ctermbg=none ctermbg=237 guibg=#3c3836
-highlight Normal guibg=#1e2127
-highlight ColorColumn ctermbg=237 guibg=#3c3836
-highlight SignColumn ctermbg=237 guibg=#3c3836
+colo OceanicNext
 
-let g:completion_enable_auto_paren = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
 
@@ -69,6 +64,11 @@ let bufferline.icons = v:false
 let bufferline.animation = v:false
 let bufferline.closable = v:false
 
+let g:signify_sign_change = '|'
+let g:signify_sign_add = '|'
+let g:signify_sign_delete = '|'
+let g:signify_priority = 5
+
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
 :lua << EOF
@@ -84,7 +84,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>p', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   end
   local servers = {'pyright', 'vimls', 'rust_analyzer', 'clangd', 'texlab', 'tsserver' }
   for _, lsp in ipairs(servers) do
@@ -184,27 +184,12 @@ require('telescope').setup{
 }
 EOF
 
-:lua <<EOF
-  require('gitsigns').setup {
-  signs = {
-        add          = {hl = 'DiffAdd'   , text = '│', numhl='GitSignsAddNr'},
-        change       = {hl = 'DiffChange', text = '│', numhl='GitSignsChangeNr'},
-        delete       = {hl = 'DiffDelete', text = '│', numhl='GitSignsDeleteNr'},
-        topdelete    = {hl = 'DiffDelete', text = '‾', numhl='GitSignsDeleteNr'},
-        changedelete = {hl = 'DiffChange', text = '│', numhl='GitSignsChangeNr'},
-    },
-  }
-EOF
-
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
 tno <silent> <Esc> <C-\><C-n>
-nn <silent> <leader>j :lua vim.lsp.diagnostic.goto_next()<CR>
-nn <silent> <leader>k :lua vim.lsp.diagnostic.goto_prev()<CR>
+nn <silent> <leader>sj :lua vim.lsp.diagnostic.goto_next()<CR>
+nn <silent> <leader>sk :lua vim.lsp.diagnostic.goto_prev()<CR>
 
-" moving cursor on wrapped lines
-" noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
-" noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 noremap <C-c> <c-[>
 nnoremap <silent> <leader>F <cmd>Telescope find_files<cr>
 nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
@@ -215,12 +200,10 @@ nnoremap <silent> <leader>y <cmd>Telescope help_tags<cr>
 nnoremap <silent> <leader>e :bn<CR>
 nnoremap <silent> <leader>q :bp<CR>
 nnoremap <silent> <leader>w :bd<CR>
-nnoremap <silent> <leader>s :set list!<CR>
-nnoremap <silent> <leader>o o<CR><Up>
 nnoremap <silent> <leader>gs :Gstatus<CR>
 nnoremap <silent> <leader>gc :Git commit<CR>
-nnoremap <silent> <leader>gn :GitGutterNextHunk<CR>
-nnoremap <silent> <leader>gp :GitGutterPrevHunk<CR>
+nnoremap <silent> <leader>gj <plug>(signify-next-hunk)
+nnoremap <silent> <leader>gk <plug>(signify-prev-hunk)
 nnoremap <silent> <leader>m :MaximizerToggle!<CR>
 nnoremap <silent> <leader>dd :call vimspector#Launch()<CR>
 
