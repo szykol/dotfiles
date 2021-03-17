@@ -1,7 +1,7 @@
 call plug#begin(stdpath('data') . '/vim-plug')
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-compe'
 Plug '9mm/vim-closer'
 Plug 'tpope/vim-commentary'
 Plug 'sainnhe/edge'
@@ -12,6 +12,7 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'arcticicestudio/nord-vim'
 Plug 'embark-theme/vim', { 'as': 'embark' }
 Plug 'mhartington/oceanic-next'
+Plug 'sainnhe/sonokai'
 Plug 'glepnir/zephyr-nvim'
 Plug 'romgrk/barbar.nvim'
 Plug 'szykol/statusline.nvim'
@@ -46,7 +47,7 @@ let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 let g:edge_style = 'neon'
 
-colo OceanicNext
+colo sonokai
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
@@ -118,6 +119,10 @@ nnoremap <silent> <leader>t :Lex <bar> :vertical resize 30<CR>
 nnoremap <silent> <leader>T :sp<bar>term<CR> :resize 7<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 
 fun! TrimWhitespace()
     let l:save = winsaveview()
