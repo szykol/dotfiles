@@ -1,24 +1,15 @@
 call plug#begin(stdpath('data') . '/vim-plug')
-
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
-Plug '9mm/vim-closer'
 Plug 'tpope/vim-commentary'
-Plug 'sainnhe/edge'
 Plug 'tweekmonster/startuptime.vim'
-Plug 'mizlan/termbufm'
-Plug 'gruvbox-community/gruvbox'
 
-Plug 'arcticicestudio/nord-vim'
-Plug 'embark-theme/vim', { 'as': 'embark' }
 Plug 'mhartington/oceanic-next'
 Plug 'sainnhe/sonokai'
-Plug 'glepnir/zephyr-nvim'
 Plug 'romgrk/barbar.nvim'
 Plug 'szykol/statusline.nvim'
 Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
-Plug 'rafi/awesome-vim-colorschemes'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
@@ -41,6 +32,7 @@ set scrolloff=8
 set termguicolors
 set mouse=a
 set nohlsearch
+set completeopt=menuone,noselect
 
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
