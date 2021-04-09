@@ -3,7 +3,6 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'tpope/vim-commentary'
 Plug 'tweekmonster/startuptime.vim'
-
 Plug 'mhartington/oceanic-next'
 Plug 'sainnhe/sonokai'
 Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
@@ -16,7 +15,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'hoob3rt/lualine.nvim'
+" Plug 'hoob3rt/lualine.nvim'
+Plug 'glepnir/galaxyline.nvim'
 Plug 'joshdick/onedark.vim'
 
 Plug 'nvim-lua/popup.nvim'
@@ -70,6 +70,7 @@ let g:signify_priority = 5
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
 luafile ~/.config/nvim/lua/plugins.lua
+luafile ~/.config/nvim/lua/statusline.lua
 
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
