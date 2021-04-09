@@ -6,13 +6,18 @@ Plug 'tweekmonster/startuptime.vim'
 
 Plug 'mhartington/oceanic-next'
 Plug 'sainnhe/sonokai'
+Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
+
 Plug 'romgrk/barbar.nvim'
-Plug 'szykol/statusline.nvim'
+" Plug 'szykol/statusline.nvim'
 Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'hoob3rt/lualine.nvim'
+Plug 'joshdick/onedark.vim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -39,7 +44,7 @@ let g:gruvbox_italicize_strings = 1
 let g:gruvbox_contrast_dark = 'hard'
 let g:edge_style = 'neon'
 
-colo sonokai
+colorscheme onedark
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
