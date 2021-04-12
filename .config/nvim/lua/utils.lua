@@ -60,9 +60,6 @@ local function validate_config(config)
   if not config.user then
     table.insert(errors, "No user")
   end
-  if not config.port then
-    table.insert(errors, "No port")
-  end
   if not config.target_path then
     table.insert(errors, "No target path")
   end
@@ -125,7 +122,8 @@ local function perform_upload()
     return
   end
 
-  config.mode = config.mode or "scp"
+  config.mode = config.mode or "sftp"
+  config.mode = "scp"
 
   local cmd = build_cmd(config)
   cmd.on_exit = function(_, return_val)
@@ -133,9 +131,9 @@ local function perform_upload()
     print("[sftp] sending " .. relative_file .. " " .. result)
   end
 
-  print(vim.inspect(cmd))
+  -- print(vim.inspect(cmd))
 
-  Job:new(cmd):sync()
+  Job:new(cmd):start()
 end
 
 return {
