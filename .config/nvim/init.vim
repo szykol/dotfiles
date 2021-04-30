@@ -22,6 +22,8 @@ Plug 'joshdick/onedark.vim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'folke/lsp-trouble.nvim'
+Plug 'simrat39/symbols-outline.nvim'
 call plug#end()
 
 filetype plugin indent on
@@ -48,6 +50,7 @@ colorscheme onedark
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
+let g:onedark_terminal_italics = 1
 
 if argv(0) ==# '.'
     let g:netrw_browse_split = 0
@@ -85,9 +88,9 @@ nnoremap <silent> <leader>rg <cmd>Telescope grep_string<cr>
 nnoremap <silent> <leader>b <cmd>Telescope buffers<cr>
 nnoremap <silent> <leader>y <cmd>Telescope help_tags<cr>
 
-nnoremap <silent> <leader>e :bn<CR>
-nnoremap <silent> <leader>q :bp<CR>
-nnoremap <silent> <leader>w :bd<CR>
+nnoremap <silent> <leader>q :SymbolsOutline<CR>
+nnoremap <silent> <leader>e :LspTroubleToggle<CR>
+nnoremap <silent> <leader>w :bd!<CR>
 nnoremap <silent> <leader>gs :Gstatus<CR>
 nnoremap <silent> <leader>gc :Git commit<CR>
 nnoremap <silent> <leader>gj <plug>(signify-next-hunk)
