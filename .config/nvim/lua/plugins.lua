@@ -130,3 +130,5 @@ vim.g.symbols_outline = {
   },
   lsp_blacklist = {},
 }
+
+require("todo-comments").setup {}

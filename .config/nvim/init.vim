@@ -17,12 +17,16 @@ Plug 'szw/vim-maximizer'
 Plug 'kyazdani42/nvim-web-devicons'
 " Plug 'hoob3rt/lualine.nvim'
 Plug 'glepnir/galaxyline.nvim'
-Plug 'joshdick/onedark.vim'
+" Plug 'joshdick/onedark.vim'
+Plug 'monsonjeremy/onedark.nvim'
+" Plug 'navarasu/onedark.nvim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'folke/lsp-trouble.nvim'
+Plug 'folke/todo-comments.nvim'
+Plug 'folke/zen-mode.nvim'
 Plug 'simrat39/symbols-outline.nvim'
 call plug#end()
 
@@ -47,6 +51,10 @@ let g:gruvbox_contrast_dark = 'hard'
 let g:edge_style = 'neon'
 
 colorscheme onedark
+
+highlight SignifySignAdd ctermfg=114 guifg=#98C379
+highlight SignifySignChange ctermfg=180 guifg=#E5C07B
+highlight SignifySignDelete ctermfg=204 guifg=#E06C75
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
@@ -136,6 +144,7 @@ endfun
 augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
+    " autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
