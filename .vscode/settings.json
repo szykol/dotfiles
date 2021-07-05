@@ -1,55 +1,22 @@
 {
     "telemetry.enableTelemetry": false,
-    "workbench.settings.editor": "json",
 
-    "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
-    },
-
-    "editor.suggestSelection": "first",
     "editor.cursorBlinking": "smooth",
     "editor.cursorSmoothCaretAnimation": true,
-    "editor.tabCompletion": "on",
 
-    "diffEditor.renderSideBySide": false,
+    "editor.fontFamily": "Iosevka, Consolas, 'monospace', monospace, 'Droid Sans Fallback'",
 
-    "java.errors.incompleteClasspath.severity": "ignore",
-    "editor.fontFamily": "Consolas, 'monospace', monospace, 'Droid Sans Fallback'",
-    
     "workbench.iconTheme": "material-icon-theme",
-    "workbench.editor.closeEmptyGroups": true,
-    "workbench.statusBar.feedback.visible": false,
     "workbench.startupEditor": "none",
-    "workbench.colorTheme": "Cobalt2",
-    "workbench.statusBar.visible": true,
-    "workbench.colorCustomizations": {
-        "statusBar.background": "#0059ffa4",
-        "[Cobalt2]": {
-            "tab.activeBackground": "#077bf73e",
-            "tab.activeBorder": "#fffb0050",
-            "gitDecoration.ignoredResourceForeground": "#706e6e"
-        }
-    },
-    "workbench.dialogs.useSimplified": false,
-    
-    
-    "debug.openDebug": "openOnDebugBreak",
-    "debug.internalConsoleOptions": "openOnSessionStart",
 
-    "window.zoomLevel": 1,
+    "window.zoomLevel": 0,
     "window.menuBarVisibility": "toggle",
+    "editor.fontSize": 16,
 
-    "python.jediEnabled": false,
-    // "terminal.integrated.shellArgs.linux": [
-    //     "-c",
-    //     "zsh"
-    // ],
     "breadcrumbs.enabled": true,
     "editor.minimap.enabled": false,
     "git.ignoreMissingGitWarning": true,
-    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\wsl.exe",
-    "vsintellicode.modify.editor.suggestSelection": "choseToUpdateConfiguration",
+    "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
+    "vscode-neovim.neovimInitVimPaths.linux": "$HOME/.config/nvim/init.vim",
+    "editor.scrollBeyondLastLine": false
 }
