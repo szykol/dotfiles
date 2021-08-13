@@ -132,3 +132,42 @@ vim.g.symbols_outline = {
 }
 
 require("todo-comments").setup {}
+
+-- require('onedark').setup()
+
+require('lspkind').init({
+    with_text = true,
+    preset = 'codicons',
+    symbol_map = {
+      Text = "",
+      Method = "",
+      Function = "",
+      Constructor = "",
+      Field = "ﰠ",
+      Variable = "",
+      Class = "ﴯ",
+      Interface = "",
+      Module = "",
+      Property = "ﰠ",
+      Unit = "塞",
+      Value = "",
+      Enum = "",
+      Keyword = "",
+      Snippet = "",
+      Color = "",
+      File = "",
+      Reference = "",
+      Folder = "",
+      EnumMember = "",
+      Constant = "",
+      Struct = "פּ",
+      Event = "",
+      Operator = "",
+      TypeParameter = ""
+    },
+})
+
+local saga = require 'lspsaga'
+saga.init_lsp_saga()
+
+require('github-theme').setup()

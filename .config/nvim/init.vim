@@ -15,7 +15,7 @@ if !exists('g:vscode')
     Plug 'sainnhe/sonokai'
     Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
 
-    Plug 'romgrk/barbar.nvim'
+    " Plug 'romgrk/barbar.nvim'
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -23,7 +23,7 @@ if !exists('g:vscode')
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'glepnir/galaxyline.nvim'
-    Plug 'monsonjeremy/onedark.nvim'
+    " Plug 'monsonjeremy/onedark.nvim'
 
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
@@ -32,6 +32,17 @@ if !exists('g:vscode')
     Plug 'folke/todo-comments.nvim'
     Plug 'folke/zen-mode.nvim'
     Plug 'simrat39/symbols-outline.nvim'
+    Plug 'psf/black'
+    Plug 'onsails/lspkind-nvim'
+    Plug 'kosayoda/nvim-lightbulb'
+    " Plug 'npxbr/glow.nvim'
+    Plug 'lukas-reineke/indent-blankline.nvim'
+    Plug 'kevinhwang91/nvim-bqf'
+    Plug 'glepnir/lspsaga.nvim'
+    Plug 'ray-x/lsp_signature.nvim'
+    Plug 'joshdick/onedark.vim'
+    Plug 'projekt0n/github-nvim-theme'
+    Plug 'kyazdani42/nvim-tree.lua'
 endif
 
 call plug#end()
@@ -50,6 +61,8 @@ set termguicolors
 set mouse=a
 set nohlsearch
 set completeopt=menuone,noselect
+set clipboard+=unnamedplus
+set noequalalways
 
 let &stl = " %f %m"
 let g:gruvbox_italicize_strings = 1
@@ -57,10 +70,6 @@ let g:gruvbox_contrast_dark = 'hard'
 let g:edge_style = 'neon'
 
 colorscheme onedark
-
-highlight SignifySignAdd ctermfg=114 guifg=#98C379
-highlight SignifySignChange ctermfg=180 guifg=#E5C07B
-highlight SignifySignDelete ctermfg=204 guifg=#E06C75
 
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
@@ -91,6 +100,8 @@ if !exists('g:vscode')
     luafile ~/.config/nvim/lua/statusline.lua
 endif
 
+set lcs=trail:.,tab:>-
+
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
 tno <silent> <Esc> <C-\><C-n>
@@ -103,6 +114,8 @@ nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
 nnoremap <silent> <leader>rg <cmd>Telescope grep_string<cr>
 nnoremap <silent> <leader>b <cmd>Telescope buffers<cr>
 nnoremap <silent> <leader>y <cmd>Telescope help_tags<cr>
+nnoremap <silent> <leader>g <cmd>Telescope git_branches<cr>
+" nnoremap <silent> <leader>t <cmd>Telescope file_browser<cr>
 
 nnoremap <silent> <leader>q :SymbolsOutline<CR>
 nnoremap <silent> <leader>e :LspTroubleToggle<CR>
@@ -112,6 +125,7 @@ nnoremap <silent> <leader>gc :Git commit<CR>
 nnoremap <silent> <leader>gj <plug>(signify-next-hunk)
 nnoremap <silent> <leader>gk <plug>(signify-prev-hunk)
 nnoremap <silent> <leader>m :MaximizerToggle!<CR>
+nnoremap <silent> <leader>v :vsplit<cr>
 nnoremap <silent> <leader>dd :call vimspector#Launch()<CR>
 
 nmap <silent> <leader>dl <Plug>VimspectorStepInto
@@ -129,11 +143,8 @@ nnoremap <silent> <leader>l :wincmd l<CR>
 nnoremap <silent> <leader>j :wincmd j<CR>
 nnoremap <silent> <leader>k :wincmd k<CR>
 
-inoremap <expr> <C-j> "\<C-n>"
-inoremap <expr> <C-k> "\<C-p>"
-
-nnoremap <silent> <leader>t :Lex <bar> :vertical resize 30<CR>
-nnoremap <silent> <leader>T :sp<bar>term<CR> :resize 7<CR>
+" nnoremap <silent> <leader>t :Lex <bar> :vertical resize 30<CR>
+nnoremap <silent> <leader>T :bo sp<bar>term<CR> :resize 10<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
 
@@ -142,6 +153,11 @@ inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 
 nnoremap <leader>P :lua require('utils').perform_upload()<CR>
+nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+
+nnoremap <silent><leader>t :NvimTreeToggle<CR>
+nnoremap <silent><leader>nr :NvimTreeRefresh<CR>
+nnoremap <silent><leader>nn :NvimTreeFindFile<CR>
 
 if exists('g:vscode')
     nnoremap <silent> <leader>h :call VSCodeNotify('workbench.action.navigateLeft')<CR>
@@ -150,7 +166,7 @@ if exists('g:vscode')
     nnoremap <silent> <leader>k :call VSCodeNotify('workbench.action.navigateUp')<CR>
 
     nnoremap <silent> <leader>f :call VSCodeNotify('workbench.action.quickOpen')<CR>
-    nnoremap <silent> <leader>w :call VSCodeNotify('workbench.action.closeWindow')<CR>
+    nnoremap <silent> <leader>w :call VSCodeNotify('workbench.action.closeActiveEditor')<CR>
     nnoremap <silent> <leader>v :call VSCodeNotify('workbench.action.splitEditor')<CR>
 
     nnoremap <silent> gr :call VSCodeNotify('editor.action.goToReferences')<CR>
@@ -172,7 +188,14 @@ endfun
 augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
-    " autocmd BufWritePost * :lua require('utils').perform_upload()
+    autocmd BufWritePost *.py :silent Black
+    autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+    autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()
 augroup END
+
+
+highlight SignifySignAdd guifg=#58d464
+highlight SignifySignChange ctermfg=180 guifg=#00F7FC
+highlight SignifySignDelete ctermfg=204 guifg=#E06C75
