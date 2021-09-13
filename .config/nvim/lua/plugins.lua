@@ -170,4 +170,4 @@ require('lspkind').init({
 local saga = require 'lspsaga'
 saga.init_lsp_saga()
 
-require('github-theme').setup()
+-- require('github-theme').setup()

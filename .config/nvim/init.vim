@@ -36,11 +36,12 @@ if !exists('g:vscode')
     Plug 'onsails/lspkind-nvim'
     Plug 'kosayoda/nvim-lightbulb'
     " Plug 'npxbr/glow.nvim'
-    Plug 'lukas-reineke/indent-blankline.nvim'
+    " Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'glepnir/lspsaga.nvim'
     Plug 'ray-x/lsp_signature.nvim'
-    Plug 'joshdick/onedark.vim'
+    " Plug 'joshdick/onedark.vim'
+    Plug 'navarasu/onedark.nvim'
     Plug 'projekt0n/github-nvim-theme'
     Plug 'kyazdani42/nvim-tree.lua'
 endif
@@ -189,13 +190,30 @@ augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
     autocmd BufWritePost *.py :silent Black
-    autocmd BufWritePost * :lua require('utils').perform_upload()
+    " autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
     autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()
 augroup END
 
-
 highlight SignifySignAdd guifg=#58d464
 highlight SignifySignChange ctermfg=180 guifg=#00F7FC
 highlight SignifySignDelete ctermfg=204 guifg=#E06C75
+
+highlight LspDiagnosticsDefaultError ctermfg=204 guifg=#E06C75
+highlight LspDiagnosticsDefaultInformation ctermfg=39 guifg=#61AFEF
+highlight LspDiagnosticsDefaultHint ctermfg=38 guifg=#56B6C2
+highlight LspDiagnosticsDefaultWarning ctermfg=180 guifg=#E5C07B
+
+highlight LspDiagnosticsUnderlineError cterm=underline ctermfg=204 gui=underline guifg=#E06C75
+highlight LspDiagnosticsUnderlineInformation cterm=underline ctermfg=39 gui=underline guifg=#61AFEF
+highlight LspDiagnosticsUnderlineHint cterm=underline ctermfg=38 gui=underline guifg=#56B6C2
+highlight LspDiagnosticsUnderlineWarning cterm=underline ctermfg=180 gui=underline guifg=#E5C07B
+
+highlight LspDiagnosticsVirtualTextError ctermfg=204 ctermbg=236 guifg=#E06C75 guibg=#2C323C
+highlight LspDiagnosticsVirtualTextInformation ctermfg=39 ctermbg=236 guifg=#61AFEF guibg=#2C323C
+highlight LspDiagnosticsVirtualTextHint ctermfg=38 ctermbg=236 guifg=#56B6C2 guibg=#2C323C
+highlight LspDiagnosticsVirtualTextWarning ctermfg=180 ctermbg=236 guifg=#E5C07B guibg=#2C323C
+
+highlight TelescopeResultsBorder guifg=#98c379
+highlight TelescopePreviewBorder guifg=#98c379
