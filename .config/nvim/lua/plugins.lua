@@ -1,3 +1,34 @@
+-- Setup nvim-cmp.
+local cmp = require'cmp'
+local lspkind = require('lspkind')
+
+cmp.setup({
+    snippet = {
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body)
+      end,
+    },
+    mapping = {
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    },
+    sources = {
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' },
+      { name = 'buffer' },
+      { name = 'path' },
+      { name = 'calc' },
+      { name = 'spell' },
+    },
+    formatting = {
+      format = lspkind.cmp_format({with_text = true, maxwidth = 50})
+    }
+})
+
+
 local nvim_lsp = require("lspconfig")
 
 local on_attach = function(_, bufnr)
@@ -17,36 +48,9 @@ local servers = {'pyright', 'vimls', 'rust_analyzer', 'clangd', 'texlab', 'tsser
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
   on_attach = on_attach,
+  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 }
 end
-
-require'compe'.setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  -- preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  incomplete_delay = 400;
-  max_abbr_width = 200;
-  max_kind_width = 200;
-  max_menu_width = 200;
-  documentation = true;
-
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    vsnip = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    spell = true;
-    tags = true;
-    snippets_nvim = true;
-    treesitter = true;
-  };
-}
 
 local system_name
 if vim.fn.has("mac") == 1 then
@@ -92,7 +96,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
-
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "cpp", "bash", "python", "typescript", "javascript" },
   highlight = {
@@ -132,42 +135,3 @@ vim.g.symbols_outline = {
 }
 
 require("todo-comments").setup {}
-
--- require('onedark').setup()
-
-require('lspkind').init({
-    with_text = true,
-    preset = 'codicons',
-    symbol_map = {
-      Text = "",
-      Method = "",
-      Function = "",
-      Constructor = "",
-      Field = "ﰠ",
-      Variable = "",
-      Class = "ﴯ",
-      Interface = "",
-      Module = "",
-      Property = "ﰠ",
-      Unit = "塞",
-      Value = "",
-      Enum = "",
-      Keyword = "",
-      Snippet = "",
-      Color = "",
-      File = "",
-      Reference = "",
-      Folder = "",
-      EnumMember = "",
-      Constant = "",
-      Struct = "פּ",
-      Event = "",
-      Operator = "",
-      TypeParameter = ""
-    },
-})
-
-local saga = require 'lspsaga'
-saga.init_lsp_saga()
-
--- require('github-theme').setup()

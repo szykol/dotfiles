@@ -9,13 +9,12 @@ Plug 'tpope/vim-commentary'
 Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'), { 'as': 'vsc-easymotion' }) 
 if !exists('g:vscode')
     Plug 'neovim/nvim-lspconfig'
-    Plug 'hrsh7th/nvim-compe'
+
     Plug 'tweekmonster/startuptime.vim'
     Plug 'mhartington/oceanic-next'
     Plug 'sainnhe/sonokai'
     Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
 
-    " Plug 'romgrk/barbar.nvim'
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -23,27 +22,34 @@ if !exists('g:vscode')
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'glepnir/galaxyline.nvim'
-    " Plug 'monsonjeremy/onedark.nvim'
 
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
+
     Plug 'folke/lsp-trouble.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'folke/zen-mode.nvim'
+
     Plug 'simrat39/symbols-outline.nvim'
     Plug 'psf/black'
     Plug 'onsails/lspkind-nvim'
     Plug 'kosayoda/nvim-lightbulb'
-    " Plug 'npxbr/glow.nvim'
-    " Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'kevinhwang91/nvim-bqf'
-    Plug 'glepnir/lspsaga.nvim'
     Plug 'ray-x/lsp_signature.nvim'
-    " Plug 'joshdick/onedark.vim'
     Plug 'navarasu/onedark.nvim'
     Plug 'projekt0n/github-nvim-theme'
     Plug 'kyazdani42/nvim-tree.lua'
+
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/nvim-cmp'
+
+    Plug 'hrsh7th/cmp-vsnip'
+    Plug 'hrsh7th/vim-vsnip'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-calc'
+    Plug 'f3fora/cmp-spell'
 endif
 
 call plug#end()
@@ -61,7 +67,7 @@ set scrolloff=8
 set termguicolors
 set mouse=a
 set nohlsearch
-set completeopt=menuone,noselect
+set completeopt=menu,menuone,noselect
 set clipboard+=unnamedplus
 set noequalalways
 
@@ -149,12 +155,12 @@ nnoremap <silent> <leader>T :bo sp<bar>term<CR> :resize 10<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
 
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-Space> compe#complete()
+" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 
 nnoremap <leader>P :lua require('utils').perform_upload()<CR>
-nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+" nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
 
 nnoremap <silent><leader>t :NvimTreeToggle<CR>
 nnoremap <silent><leader>nr :NvimTreeRefresh<CR>
@@ -189,7 +195,7 @@ endfun
 augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
-    autocmd BufWritePost *.py :silent Black
+    " autocmd BufWritePost *.py :silent Black
     " autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
