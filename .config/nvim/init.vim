@@ -11,9 +11,9 @@ if !exists('g:vscode')
     Plug 'neovim/nvim-lspconfig'
 
     Plug 'tweekmonster/startuptime.vim'
-    Plug 'mhartington/oceanic-next'
-    Plug 'sainnhe/sonokai'
-    Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
+    " Plug 'mhartington/oceanic-next'
+    " Plug 'sainnhe/sonokai'
+    " Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
 
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
@@ -21,7 +21,7 @@ if !exists('g:vscode')
     Plug 'puremourning/vimspector'
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'glepnir/galaxyline.nvim'
+    " Plug 'glepnir/galaxyline.nvim'
 
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
@@ -29,16 +29,16 @@ if !exists('g:vscode')
 
     Plug 'folke/lsp-trouble.nvim'
     Plug 'folke/todo-comments.nvim'
-    Plug 'folke/zen-mode.nvim'
+    " Plug 'folke/zen-mode.nvim'
 
     Plug 'simrat39/symbols-outline.nvim'
     Plug 'psf/black'
     Plug 'onsails/lspkind-nvim'
-    Plug 'kosayoda/nvim-lightbulb'
+    " Plug 'kosayoda/nvim-lightbulb'
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'navarasu/onedark.nvim'
-    Plug 'projekt0n/github-nvim-theme'
+    " Plug 'projekt0n/github-nvim-theme'
     Plug 'kyazdani42/nvim-tree.lua'
 
     Plug 'hrsh7th/cmp-nvim-lsp'
@@ -50,6 +50,9 @@ if !exists('g:vscode')
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-calc'
     Plug 'f3fora/cmp-spell'
+
+    Plug 'akinsho/toggleterm.nvim'
+    Plug 'nvim-lualine/lualine.nvim'
 endif
 
 call plug#end()
@@ -104,14 +107,20 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
-    luafile ~/.config/nvim/lua/statusline.lua
+    " luafile ~/.config/nvim/lua/statusline.lua
 endif
 
 set lcs=trail:.,tab:>-
 
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
+
 tno <silent> <Esc> <C-\><C-n>
+tno <silent> <C-h> <C-\><C-n><C-W>h
+tno <silent> <C-j> <C-\><C-n><C-W>j
+tno <silent> <C-l> <C-\><C-n><C-W>l
+tno <silent> <C-k> <C-\><C-n><C-W>k
+
 nn <silent> <leader>sj :lua vim.lsp.diagnostic.goto_next()<CR>
 nn <silent> <leader>sk :lua vim.lsp.diagnostic.goto_prev()<CR>
 
@@ -150,8 +159,12 @@ nnoremap <silent> <leader>l :wincmd l<CR>
 nnoremap <silent> <leader>j :wincmd j<CR>
 nnoremap <silent> <leader>k :wincmd k<CR>
 
-" nnoremap <silent> <leader>t :Lex <bar> :vertical resize 30<CR>
-nnoremap <silent> <leader>T :bo sp<bar>term<CR> :resize 10<CR>
+nnoremap <silent> <C-h> :wincmd h<CR>
+nnoremap <silent> <C-l> :wincmd l<CR>
+nnoremap <silent> <C-j> :wincmd j<CR>
+nnoremap <silent> <C-k> :wincmd k<CR>
+
+nnoremap <silent> <leader>T :ToggleTerm<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
 
@@ -199,7 +212,6 @@ augroup SZYKOL
     " autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
-    autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()
 augroup END
 
 highlight SignifySignAdd guifg=#58d464

@@ -1,6 +1,5 @@
 -- Setup nvim-cmp.
-local cmp = require'cmp'
-local lspkind = require('lspkind')
+local cmp = require'cmp' local lspkind = require('lspkind')
 
 cmp.setup({
     snippet = {
@@ -135,3 +134,38 @@ vim.g.symbols_outline = {
 }
 
 require("todo-comments").setup {}
+
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
+
+require"nvim-tree".setup {}
+require("toggleterm").setup{
+  -- size can be a number or function which is passed the current terminal
+  size = 10 or function(term)
+    if term.direction == "horizontal" then
+      return 15
+    elseif term.direction == "vertical" then
+      return vim.o.columns * 0.4
+    end
+  end,
+  open_mapping = [[<c-\>]],
+  hide_numbers = true, -- hide the number column in toggleterm buffers
+  shade_filetypes = {},
+  shade_terminals = false,
+  start_in_insert = false,
+  insert_mappings = true, -- whether or not the open mapping applies in insert mode
+  persist_size = true,
+  direction = 'horizontal',
+  close_on_exit = true, -- close the terminal window when the process exits
+  shell = vim.o.shell, -- change the default shell
+  -- This field is only relevant if direction is set to 'float'
+}
+
+require"lualine".setup {
+    options = {section_separators = '', component_separators = ''}
+}
+
