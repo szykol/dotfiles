@@ -21,7 +21,7 @@ if !exists('g:vscode')
     Plug 'puremourning/vimspector'
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
-    " Plug 'glepnir/galaxyline.nvim'
+    Plug 'glepnir/galaxyline.nvim'
 
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
@@ -52,7 +52,7 @@ if !exists('g:vscode')
     Plug 'f3fora/cmp-spell'
 
     Plug 'akinsho/toggleterm.nvim'
-    Plug 'nvim-lualine/lualine.nvim'
+    " Plug 'nvim-lualine/lualine.nvim'
 endif
 
 call plug#end()
@@ -107,7 +107,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
-    " luafile ~/.config/nvim/lua/statusline.lua
+    luafile ~/.config/nvim/lua/statusline.lua
 endif
 
 set lcs=trail:.,tab:>-
@@ -235,3 +235,5 @@ highlight LspDiagnosticsVirtualTextWarning ctermfg=180 ctermbg=236 guifg=#E5C07B
 
 highlight TelescopeResultsBorder guifg=#98c379
 highlight TelescopePreviewBorder guifg=#98c379
+
+"  master

@@ -165,7 +165,6 @@ require("toggleterm").setup{
   -- This field is only relevant if direction is set to 'float'
 }
 
-require"lualine".setup {
-    options = {section_separators = '', component_separators = ''}
-}
-
+-- require"lualine".setup {
+--     options = {section_separators = '', component_separators = ''}
+-- }
