@@ -1,11 +1,18 @@
 -- Based on https://github.com/glepnir/galaxyline.nvim/blob/main/example/eviline.lua
 local gl = require('galaxyline')
 local colors = require('galaxyline.theme').default
-colors.bg = "#2c343c"
+
+-- colors.light_bg = "#353b46"
+colors.light_bg = "#2c343c"
+
+colors.bg = "#282c34"
 
 local condition = require('galaxyline.condition')
 local gls = gl.section
 local fileinfo = require('galaxyline.provider_fileinfo')
+local vcs = require('galaxyline.provider_vcs')
+local diagnostic = require('galaxyline.provider_diagnostic')
+
 local icons = require('nvim-web-devicons')
 
 local git_icon, _ = icons.get_icon("git")
@@ -17,23 +24,19 @@ local system_icons = {
   mac = '', -- e711
 }
 
-gl.short_line_list = {'NvimTree','vista','dbui','packer'}
+local circle_sep_right = ' '
+local circle_sep_left = ''
 
-local create_separator = function(text, separator_condition)
-    local separator_section = {
-        separator = {
-            provider = function ()
-                return text
-            end,
-            highlight = {'NONE',colors.bg,},
-        }
-    }
-    if separator_condition then
-        separator_section.separator.condition = separator_condition
-    end
-
-    return separator_section
-end
+gl.short_line_list = {
+    'LuaTree',
+    'dbui',
+    'startify',
+    'term',
+    'nerdtree',
+    'fugitive',
+    'fugitiveblame',
+    'plug'
+}
 
 local lsp_condition = function ()
   local tbl = {['dashboard'] = true,['']=true}
@@ -43,12 +46,36 @@ local lsp_condition = function ()
   return true
 end
 
+local trim_spaces = function (s)
+    if s then
+        return string.gsub(s, "%s+", "")
+    end
+    return s
+end
+
+local trim_last_space = function (s)
+    if s then
+        return string.sub(s, 1, -2)
+    end
+    return s
+end
+
 gls.left = {}
 
 table.insert(gls.left, {
-  RainbowRed = {
-    provider = function() return '▊ ' end,
-    highlight = {colors.blue,colors.bg}
+  RainbowBlue = {
+    provider = function() return '▊  ' end,
+    highlight = {colors.blue,colors.bg},
+    separator = ' ',
+    separator_highlight = {'NONE',colors.bg},
+  },
+})
+
+table.insert(gls.left, {
+  SectionStart = {
+    provider = function() return circle_sep_left end,
+    highlight = {colors.light_bg,colors.bg},
+    separator_highlight = {'NONE',colors.light_bg},
   },
 })
 
@@ -64,12 +91,12 @@ table.insert(gls.left, {
                           rm = colors.cyan, ['r?'] = colors.cyan,
                           ['!']  = colors.red,t = colors.red}
       vim.api.nvim_command('hi GalaxyViMode guifg='..mode_color[vim.fn.mode()])
-      local alias = {n = 'NORMAL',i = 'INSERT',c= 'COMMAND',v= 'VISUAL',V= 'V-LINE', [''] = 'V-BLOCK'}
+      local alias = {n = 'N',i = 'I',c= 'C',v= 'V',V= 'VL', [''] = 'VB'}
       return alias[vim.fn.mode()]
     end,
-    separator = '  ',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {colors.red,colors.bg,'bold'},
+    separator = ' ',
+    separator_highlight = {'NONE',colors.light_bg},
+    highlight = {colors.red,colors.light_bg,'bold'},
   },
 })
 
@@ -77,27 +104,42 @@ table.insert(gls.left, {
   FileIcon = {
     provider = 'FileIcon',
     condition = condition.buffer_not_empty,
-    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.bg},
+    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.light_bg},
   },
 })
 
 table.insert(gls.left, {
   FileName = {
-    provider = 'FileName',
+    provider = function() return trim_last_space(fileinfo.get_current_file_name()) end,
     condition = condition.buffer_not_empty,
-    highlight = {colors.blue,colors.bg,'bold'}
+    highlight = {colors.blue,colors.light_bg,'bold'}
   }
 })
 
-table.insert(gls.left, create_separator('  ', nil))
+table.insert(gls.left, {
+  SectionEnd = {
+    provider = function() return circle_sep_right end,
+    highlight = {colors.light_bg,colors.bg},
+    separator_highlight = {'NONE',colors.bg},
+  },
+})
+
+table.insert(gls.left, {
+  SectionStart = {
+    provider = function() return circle_sep_left end,
+    condition = condition.check_git_workspace,
+    highlight = {colors.light_bg,colors.bg},
+    separator_highlight = {'NONE',colors.bg},
+  },
+})
 
 table.insert(gls.left, {
   GitIcon = {
     provider = function() return git_icon end,
     condition = condition.check_git_workspace,
     separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {git_icon_color,colors.bg,'bold'},
+    separator_highlight = {'NONE',colors.light_bg},
+    highlight = {git_icon_color,colors.light_bg,'bold'},
   }
 })
 
@@ -105,106 +147,143 @@ table.insert(gls.left, {
   GitBranch = {
     provider = 'GitBranch',
     condition = condition.check_git_workspace,
-    highlight = {git_icon_color,colors.bg,'bold'},
-    separator = '  ',
-    separator_highlight = {'NONE',colors.bg},
+    highlight = {git_icon_color,colors.light_bg,'bold'},
   }
 })
 
 table.insert(gls.left, {
   DiffAdd = {
-    provider = 'DiffAdd',
+    provider = function()
+        return trim_spaces(vcs.diff_add())
+    end,
     condition = function ()
         return condition.hide_in_width() and condition.check_git_workspace()
     end,
-    icon = '+',
-    highlight = {colors.green,colors.bg},
-    separator_highlight = {'NONE',colors.bg},
+    icon = '  +',
+    highlight = {colors.green,colors.light_bg},
   }
 })
 
 table.insert(gls.left, {
   DiffModified = {
-    provider = 'DiffModified',
+    provider = function()
+        return trim_spaces(vcs.diff_modified())
+    end,
     condition = function ()
         return condition.hide_in_width() and condition.check_git_workspace()
     end,
-    icon = '~',
-    highlight = {colors.yellow,colors.bg},
-    separator_highlight = {'NONE',colors.bg},
+    icon = '  ~',
+    highlight = {colors.yellow,colors.light_bg},
   }
 })
 
 table.insert(gls.left, {
   DiffRemove = {
-    provider = 'DiffRemove',
+    provider = function()
+        return trim_spaces(vcs.diff_remove())
+    end,
     condition = function ()
         return condition.hide_in_width() and condition.check_git_workspace()
     end,
-    icon = '-',
-    highlight = {colors.red,colors.bg},
-    separator_highlight = {'NONE',colors.bg},
+    icon = '  -',
+    highlight = {colors.red,colors.light_bg},
   }
 })
 
-local width_and_git_condtition = function ()
-    return condition.hide_in_width() and condition.check_git_workspace()
-end
+table.insert(gls.left, {
+  SectionEnd = {
+    provider = function() return circle_sep_right end,
+    highlight = {colors.light_bg,colors.bg},
+    condition = condition.check_git_workspace,
+  },
+})
 
-table.insert(gls.left, create_separator(' ', width_and_git_condtition))
+table.insert(gls.left, {
+  SectionStart = {
+    provider = function() return circle_sep_left end,
+    highlight = {colors.light_bg,colors.bg},
+    separator_highlight = {'NONE',colors.bg},
+  },
+})
 
 table.insert(gls.left, {
   ShowLspClient = {
     provider = 'GetLspClient',
     condition = lsp_condition,
     icon = '  ',
+    highlight = {colors.green,colors.light_bg,'bold'},
     separator = ' ',
-    highlight = {colors.green,colors.bg,'bold'},
-    separator_highlight = {'NONE',colors.bg},
+    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
 table.insert(gls.left, {
   DiagnosticError = {
-    provider = 'DiagnosticError',
+    provider = function()
+        return trim_spaces(diagnostic.get_diagnostic_error())
+    end,
     icon = ' ',
-    highlight = {colors.red,colors.bg},
-    separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
+    highlight = {colors.red,colors.light_bg},
+    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
 table.insert(gls.left, {
   DiagnosticWarn = {
-    provider = 'DiagnosticWarn',
+    provider = function()
+        return trim_spaces(diagnostic.get_diagnostic_warn())
+    end,
     icon = ' ',
-    highlight = {colors.yellow,colors.bg},
-    separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
+    highlight = {colors.yellow,colors.light_bg},
+    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
 table.insert(gls.left, {
   DiagnosticHint = {
-    provider = 'DiagnosticHint',
+    provider = function()
+        return trim_spaces(diagnostic.get_diagnostic_hint())
+    end,
     icon = ' ',
-    highlight = {colors.cyan,colors.bg},
-    separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
+    highlight = {colors.cyan,colors.light_bg},
+    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
 table.insert(gls.left, {
   DiagnosticInfo = {
-    provider = 'DiagnosticInfo',
+    provider = function()
+        return trim_spaces(diagnostic.get_diagnostic_info())
+    end,
     icon = ' ',
-    highlight = {colors.blue,colors.bg},
-    separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
+    highlight = {colors.blue,colors.light_bg},
+    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
+table.insert(gls.left, {
+  SectionEnd = {
+    provider = function() return circle_sep_right end,
+    highlight = {colors.light_bg,colors.bg},
+  },
+})
+
 gls.right = {}
+
+table.insert(gls.right, {
+  SectionStart = {
+    provider = function() return circle_sep_left end,
+    highlight = {colors.light_bg,colors.bg},
+  },
+})
+
+table.insert(gls.right, {
+  FileSize = {
+    provider = 'FileSize',
+    condition = condition.hide_in_width,
+    highlight = {colors.blue,colors.light_bg,'bold'}
+  }
+})
 
 table.insert(gls.right, {
   FileEncode = {
@@ -212,9 +291,7 @@ table.insert(gls.right, {
         return string.lower(fileinfo.get_file_encode())
     end,
     condition = condition.hide_in_width,
-    separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {colors.fg,colors.bg,'bold'}
+    highlight = {colors.fg,colors.light_bg,'bold'}
   }
 })
 
@@ -226,30 +303,36 @@ table.insert(gls.right, {
     end,
     condition = condition.hide_in_width,
     separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {colors.blue,colors.bg,'bold'}
+    separator_highlight = {'NONE',colors.light_bg},
+    highlight = {colors.blue,colors.light_bg,'bold'}
   }
 })
 
 table.insert(gls.right, {
   LineInfo = {
     provider = function ()
-      local ln_col = fileinfo.line_column()
-      ln_col = ln_col:gsub("%s+", "")
-      return ln_col .. ' '
+      return trim_spaces(fileinfo.line_column())
     end,
     separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {colors.fg,colors.bg},
+    separator_highlight = {'NONE',colors.light_bg},
+    highlight = {colors.fg,colors.light_bg},
   },
 })
 
 table.insert(gls.right, {
   PerCent = {
-    provider = 'LinePercent',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {colors.fg,colors.bg,'bold'},
+    provider = function()
+        return trim_spaces(fileinfo.current_line_percent())
+    end,
+    highlight = {colors.fg,colors.light_bg,'bold'},
   }
+})
+
+table.insert(gls.right, {
+  SectionEnd = {
+    provider = function() return circle_sep_right end,
+    highlight = {colors.light_bg,colors.bg},
+  },
 })
 
 table.insert(gls.right, {
