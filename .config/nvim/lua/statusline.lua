@@ -12,6 +12,7 @@ local gls = gl.section
 local fileinfo = require('galaxyline.provider_fileinfo')
 local vcs = require('galaxyline.provider_vcs')
 local diagnostic = require('galaxyline.provider_diagnostic')
+local lspclient = require('galaxyline.provider_lsp')
 
 local icons = require('nvim-web-devicons')
 
@@ -54,20 +55,24 @@ local trim_spaces = function (s)
 end
 
 local trim_last_space = function (s)
-    if s then
-        return string.sub(s, 1, -2)
-    end
-    return s
+  local n = #s
+  while n > 0 and s:find("^%s", n) do n = n - 1 end
+  return s:sub(1, n)
 end
 
 gls.left = {}
 
 table.insert(gls.left, {
   RainbowBlue = {
-    provider = function() return '▊  ' end,
+    provider = function() return '▊' end,
     highlight = {colors.blue,colors.bg},
-    separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
+  },
+})
+
+table.insert(gls.left, {
+  separator = {
+    provider = function() return ' ' end,
+    highlight = {colors.blue,colors.bg},
   },
 })
 
@@ -104,13 +109,13 @@ table.insert(gls.left, {
   FileIcon = {
     provider = 'FileIcon',
     condition = condition.buffer_not_empty,
-    highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.light_bg},
+    highlight = {fileinfo.get_file_icon_color(),colors.light_bg},
   },
 })
 
 table.insert(gls.left, {
   FileName = {
-    provider = function() return trim_last_space(fileinfo.get_current_file_name()) end,
+    provider = function() return trim_last_space(fileinfo.get_current_file_name('●', nil)) end,
     condition = condition.buffer_not_empty,
     highlight = {colors.blue,colors.light_bg,'bold'}
   }
@@ -120,7 +125,6 @@ table.insert(gls.left, {
   SectionEnd = {
     provider = function() return circle_sep_right end,
     highlight = {colors.light_bg,colors.bg},
-    separator_highlight = {'NONE',colors.bg},
   },
 })
 
@@ -208,12 +212,12 @@ table.insert(gls.left, {
 
 table.insert(gls.left, {
   ShowLspClient = {
-    provider = 'GetLspClient',
+    provider = function()
+        return trim_spaces(lspclient.get_lsp_client("none"))
+    end,
     condition = lsp_condition,
     icon = '  ',
     highlight = {colors.green,colors.light_bg,'bold'},
-    separator = ' ',
-    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
@@ -222,9 +226,8 @@ table.insert(gls.left, {
     provider = function()
         return trim_spaces(diagnostic.get_diagnostic_error())
     end,
-    icon = ' ',
+    icon = '   ',
     highlight = {colors.red,colors.light_bg},
-    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
@@ -233,9 +236,8 @@ table.insert(gls.left, {
     provider = function()
         return trim_spaces(diagnostic.get_diagnostic_warn())
     end,
-    icon = ' ',
+    icon = '   ',
     highlight = {colors.yellow,colors.light_bg},
-    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
@@ -244,9 +246,8 @@ table.insert(gls.left, {
     provider = function()
         return trim_spaces(diagnostic.get_diagnostic_hint())
     end,
-    icon = ' ',
+    icon = '   ',
     highlight = {colors.cyan,colors.light_bg},
-    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
@@ -255,9 +256,8 @@ table.insert(gls.left, {
     provider = function()
         return trim_spaces(diagnostic.get_diagnostic_info())
     end,
-    icon = ' ',
+    icon = '   ',
     highlight = {colors.blue,colors.light_bg},
-    separator_highlight = {'NONE',colors.light_bg},
   }
 })
 
@@ -311,7 +311,7 @@ table.insert(gls.right, {
 table.insert(gls.right, {
   LineInfo = {
     provider = function ()
-      return trim_spaces(fileinfo.line_column())
+      return trim_spaces(fileinfo.line_column()) .. ' '
     end,
     separator = ' ',
     separator_highlight = {'NONE',colors.light_bg},
