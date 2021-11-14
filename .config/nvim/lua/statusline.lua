@@ -2,10 +2,11 @@
 local gl = require('galaxyline')
 local colors = require('galaxyline.theme').default
 
--- colors.light_bg = "#353b46"
-colors.light_bg = "#2c343c"
+colors.light_bg = "#353b46"
+-- colors.light_bg = "#2c343c"
 
 colors.bg = "#282c34"
+-- colors.bg = "#2c343c"
 
 local condition = require('galaxyline.condition')
 local gls = gl.section
@@ -115,7 +116,7 @@ table.insert(gls.left, {
 
 table.insert(gls.left, {
   FileName = {
-    provider = function() return trim_last_space(fileinfo.get_current_file_name('●', nil)) end,
+    provider = function() return trim_last_space(fileinfo.get_current_file_name('•', nil)) end,
     condition = condition.buffer_not_empty,
     highlight = {colors.blue,colors.light_bg,'bold'}
   }
