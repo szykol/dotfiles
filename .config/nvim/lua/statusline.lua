@@ -15,15 +15,19 @@ local vcs = require('galaxyline.provider_vcs')
 local diagnostic = require('galaxyline.provider_diagnostic')
 local lspclient = require('galaxyline.provider_lsp')
 
+local get_full_buffer_path = function()
+  return vim.fn.expand("%")
+end
+
 local icons = require('nvim-web-devicons')
 
 local git_icon, _ = icons.get_icon("git")
 local git_icon_color = "#F1502F"
 
 local system_icons = {
-  unix = '', -- e712
-  dos = '', -- e70f
-  mac = '', -- e711
+  unix = ' ', -- e712
+  dos = ' ', -- e70f
+  mac = ' ', -- e711
 }
 
 local circle_sep_right = ' '
@@ -37,7 +41,8 @@ gl.short_line_list = {
     'nerdtree',
     'fugitive',
     'fugitiveblame',
-    'plug'
+    'plug',
+    'NvimTree'
 }
 
 local lsp_condition = function ()
@@ -314,8 +319,6 @@ table.insert(gls.right, {
     provider = function ()
       return trim_spaces(fileinfo.line_column()) .. ' '
     end,
-    separator = ' ',
-    separator_highlight = {'NONE',colors.light_bg},
     highlight = {colors.fg,colors.light_bg},
   },
 })
@@ -346,27 +349,48 @@ table.insert(gls.right, {
 gls.short_line_left = {}
 
 table.insert(gls.short_line_left, {
+  separator = {
+    provider = function() return ' ' end,
+    highlight = {colors.blue,colors.bg},
+  },
+})
+
+table.insert(gls.short_line_left, {
+  SectionStart = {
+    provider = function() return circle_sep_left end,
+    highlight = {colors.light_bg,colors.bg},
+  },
+})
+
+table.insert(gls.short_line_left, {
   BufferType = {
     provider = 'FileTypeName',
     separator = ' ',
-    separator_highlight = {'NONE',colors.bg},
-    highlight = {colors.blue,colors.bg,'bold'}
+    separator_highlight = {'NONE',colors.light_bg},
+    highlight = {colors.fg,colors.light_bg,'bold'}
   }
 })
 
 table.insert(gls.short_line_left, {
   SFileName = {
-    provider =  'SFileName',
+    provider = function() return trim_spaces(get_full_buffer_path()) end,
     condition = condition.buffer_not_empty,
-    highlight = {colors.fg,colors.bg,'bold'}
+    highlight = {colors.fg,colors.light_bg}
   }
+})
+
+table.insert(gls.short_line_left, {
+  SectionEnd = {
+    provider = function() return circle_sep_right end,
+    highlight = {colors.light_bg,colors.bg},
+  },
 })
 
 gls.short_line_right = {}
 
-table.insert(gls.short_line_right, {
-  BufferIcon = {
-    provider= 'BufferIcon',
-    highlight = {colors.fg,colors.bg}
-  }
-})
+-- table.insert(gls.short_line_right, {
+--   BufferIcon = {
+--     provider= 'BufferIcon',
+--     highlight = {colors.fg,colors.bg}
+--   }
+-- })
