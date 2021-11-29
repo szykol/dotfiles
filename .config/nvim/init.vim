@@ -18,7 +18,7 @@ if !exists('g:vscode')
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    Plug 'puremourning/vimspector'
+    " Plug 'puremourning/vimspector'
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'glepnir/galaxyline.nvim'
@@ -53,6 +53,9 @@ if !exists('g:vscode')
 
     Plug 'akinsho/toggleterm.nvim'
     " Plug 'nvim-lualine/lualine.nvim'
+    Plug 'mfussenegger/nvim-dap'
+    Plug 'rcarriga/nvim-dap-ui'
+    Plug 'mfussenegger/nvim-dap-python'
 endif
 
 call plug#end()
@@ -144,13 +147,16 @@ nnoremap <silent> <leader>m :MaximizerToggle!<CR>
 nnoremap <silent> <leader>v :vsplit<cr>
 nnoremap <silent> <leader>dd :call vimspector#Launch()<CR>
 
-nmap <silent> <leader>dl <Plug>VimspectorStepInto
-nmap <silent> <leader>dj <Plug>VimspectorStepOver
-nmap <silent> <leader>dk <Plug>VimspectorStepOut
-nmap <silent> <leader>d_ <Plug>VimspectorRestart
-nmap <silent> <leader>dbp <Plug>VimspectorToggleBreakpoint
-nmap <silent> <leader>de <Plug>VimspectorReset
-nnoremap <silent> <leader>dg :call vimspector#Continue()<CR>
+nmap <silent> <leader>dl :lua require'dap'.step_into()<CR>
+nmap <silent> <leader>dj :lua require'dap'.step_over()<CR>
+nmap <silent> <leader>dk :lua require'dap'.step_out()<CR>
+nmap <silent> <leader>dg :lua require'dap'.continue()<CR>
+nmap <silent> <leader>db :lua require'dap'.toggle_breakpoint()<CR>
+
+nmap <silent> <leader>dt :lua require('dapui').toggle()<CR>
+
+" nmap <silent> <leader>d_ <Plug>VimspectorRestart
+" nmap <silent> <leader>de <Plug>VimspectorReset
 
 vnoremap <leader>p "_dP
 
@@ -212,6 +218,9 @@ augroup SZYKOL
     " autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+    autocmd FileType python nmap <buffer> <silent> <leader>dn :lua require'dap-python'.test_method()<CR>
+    autocmd FileType python nmap <buffer> <silent> <leader>dc :lua require'dap-python'.test_class()<CR>
+    autocmd FileType python nmap <silent> <leader>ds <ESC>:lua require('dap-python').debug_selection()<CR>
 augroup END
 
 highlight SignifySignAdd guifg=#58d464

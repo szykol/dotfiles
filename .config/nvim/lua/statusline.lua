@@ -20,8 +20,9 @@ local get_full_buffer_path = function()
 end
 
 local icons = require('nvim-web-devicons')
-
-local git_icon, _ = icons.get_icon("git")
+-- 
+-- local git_icon, _ = icons.get_icon("git")
+local git_icon = ""
 local git_icon_color = "#F1502F"
 
 local system_icons = {
@@ -42,8 +43,11 @@ gl.short_line_list = {
     'fugitive',
     'fugitiveblame',
     'plug',
-    'NvimTree'
+    'NvimTree',
+    'dap',
+    'dapui',
 }
+
 
 local lsp_condition = function ()
   local tbl = {['dashboard'] = true,['']=true}
@@ -65,6 +69,41 @@ local trim_last_space = function (s)
   while n > 0 and s:find("^%s", n) do n = n - 1 end
   return s:sub(1, n)
 end
+
+local highlight = function(group, fg, bg, gui)
+    local cmd = string.format('highlight %s guifg=%s guibg=%s', group, fg, bg)
+
+    if gui ~= nil then
+        cmd = cmd .. ' gui=' .. gui
+    end
+
+    vim.cmd(cmd)
+end
+
+colors.black = "#000000"
+colors.git_light = "#9e4533"
+
+highlight('StatusLineGitBranch', colors.bg, git_icon_color)
+highlight('StatusLineGitBranchBg', git_icon_color, colors.bg)
+highlight('StatusLineGitBranchEnd', git_icon_color, colors.light_bg)
+highlight('StatusLineDefault', colors.fg, colors.light_bg)
+highlight('StatusLineGitBranchName', git_icon_color, colors.light_bg, "bold")
+highlight('StatusLineGitEnd', colors.light_bg, colors.bg)
+
+highlight('StatusLineGitAdd', colors.green, colors.light_bg)
+highlight('StatusLineGitDel', colors.yellow, colors.light_bg)
+highlight('StatusLineGitMod', colors.red, colors.light_bg)
+
+highlight('StatusLineLspStart', colors.green, colors.bg)
+highlight('StatusLineLspIcon', colors.bg, colors.green)
+highlight('StatusLineLspEnd', colors.light_bg, colors.bg)
+highlight('StatusLineLspName', colors.green, colors.light_bg, "bold")
+highlight('StatusLineLspIconEnd', colors.green, colors.light_bg)
+
+highlight('StatusLineLspDiagErr', colors.red, colors.light_bg)
+highlight('StatusLineLspDiagWarn', colors.yellow, colors.light_bg)
+highlight('StatusLineLspDiagHint', colors.cyan, colors.light_bg)
+highlight('StatusLineLspDiagInfo', colors.blue, colors.light_bg)
 
 gls.left = {}
 
@@ -135,11 +174,12 @@ table.insert(gls.left, {
 })
 
 table.insert(gls.left, {
-  SectionStart = {
-    provider = function() return circle_sep_left end,
+  GitSectionStart = {
+    provider = function()
+        return circle_sep_left
+    end,
     condition = condition.check_git_workspace,
-    highlight = {colors.light_bg,colors.bg},
-    separator_highlight = {'NONE',colors.bg},
+    highlight = 'StatusLineGitBranchBg',
   },
 })
 
@@ -147,17 +187,25 @@ table.insert(gls.left, {
   GitIcon = {
     provider = function() return git_icon end,
     condition = condition.check_git_workspace,
-    separator = ' ',
-    separator_highlight = {'NONE',colors.light_bg},
-    highlight = {git_icon_color,colors.light_bg,'bold'},
+    highlight = 'StatusLineGitBranch'
   }
 })
 
 table.insert(gls.left, {
-  GitBranch = {
-    provider = 'GitBranch',
+  GitBranchSectionEnd = {
+    provider = function() return circle_sep_right end,
     condition = condition.check_git_workspace,
-    highlight = {git_icon_color,colors.light_bg,'bold'},
+    highlight = 'StatusLineGitBranchEnd',
+  },
+})
+
+table.insert(gls.left, {
+  GitBranch = {
+    provider = function ()
+        return vcs.get_git_branch()
+    end,
+    condition = condition.check_git_workspace,
+    highlight = 'StatusLineGitBranchName'
   }
 })
 
@@ -170,7 +218,7 @@ table.insert(gls.left, {
         return condition.hide_in_width() and condition.check_git_workspace()
     end,
     icon = '  +',
-    highlight = {colors.green,colors.light_bg},
+    highlight = 'StatusLineGitAdd'
   }
 })
 
@@ -183,7 +231,7 @@ table.insert(gls.left, {
         return condition.hide_in_width() and condition.check_git_workspace()
     end,
     icon = '  ~',
-    highlight = {colors.yellow,colors.light_bg},
+    highlight = 'StatusLineGitMod'
   }
 })
 
@@ -196,23 +244,39 @@ table.insert(gls.left, {
         return condition.hide_in_width() and condition.check_git_workspace()
     end,
     icon = '  -',
-    highlight = {colors.red,colors.light_bg},
+    highlight = 'StatusLineGitDel'
   }
 })
 
 table.insert(gls.left, {
-  SectionEnd = {
+  GitSectionEnd = {
     provider = function() return circle_sep_right end,
-    highlight = {colors.light_bg,colors.bg},
     condition = condition.check_git_workspace,
+    highlight = 'StatusLineGitEnd',
   },
 })
 
 table.insert(gls.left, {
-  SectionStart = {
+  LspSectionStart = {
     provider = function() return circle_sep_left end,
-    highlight = {colors.light_bg,colors.bg},
-    separator_highlight = {'NONE',colors.bg},
+    highlight = 'StatusLineLspStart'
+  },
+})
+
+table.insert(gls.left, {
+  ShowLspIcon = {
+    provider = function()
+        return ''
+    end,
+    condition = lsp_condition,
+    highlight = 'StatusLineLspIcon',
+  }
+})
+
+table.insert(gls.left, {
+  LspIconSectionEnd = {
+    provider = function() return circle_sep_right end,
+    highlight = 'StatusLineLspIconEnd',
   },
 })
 
@@ -222,8 +286,7 @@ table.insert(gls.left, {
         return trim_spaces(lspclient.get_lsp_client("none"))
     end,
     condition = lsp_condition,
-    icon = '  ',
-    highlight = {colors.green,colors.light_bg,'bold'},
+    highlight = 'StatusLineLspName',
   }
 })
 
@@ -233,7 +296,7 @@ table.insert(gls.left, {
         return trim_spaces(diagnostic.get_diagnostic_error())
     end,
     icon = '   ',
-    highlight = {colors.red,colors.light_bg},
+    highlight = 'StatusLineLspDiagErr',
   }
 })
 
@@ -243,7 +306,7 @@ table.insert(gls.left, {
         return trim_spaces(diagnostic.get_diagnostic_warn())
     end,
     icon = '   ',
-    highlight = {colors.yellow,colors.light_bg},
+    highlight = 'StatusLineLspDiagWarn',
   }
 })
 
@@ -253,7 +316,7 @@ table.insert(gls.left, {
         return trim_spaces(diagnostic.get_diagnostic_hint())
     end,
     icon = '   ',
-    highlight = {colors.cyan,colors.light_bg},
+    highlight = 'StatusLineLspDiagHint',
   }
 })
 
@@ -263,14 +326,14 @@ table.insert(gls.left, {
         return trim_spaces(diagnostic.get_diagnostic_info())
     end,
     icon = '   ',
-    highlight = {colors.blue,colors.light_bg},
+    highlight = 'StatusLineLspDiagInfo',
   }
 })
 
 table.insert(gls.left, {
-  SectionEnd = {
+  LspSectionEnd = {
     provider = function() return circle_sep_right end,
-    highlight = {colors.light_bg,colors.bg},
+    highlight = 'StatusLineLspEnd',
   },
 })
 
