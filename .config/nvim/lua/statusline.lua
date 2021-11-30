@@ -19,7 +19,7 @@ local get_full_buffer_path = function()
   return vim.fn.expand("%")
 end
 
-local icons = require('nvim-web-devicons')
+-- local icons = require('nvim-web-devicons')
 -- 
 -- local git_icon, _ = icons.get_icon("git")
 local git_icon = ""
@@ -315,7 +315,8 @@ table.insert(gls.left, {
     provider = function()
         return trim_spaces(diagnostic.get_diagnostic_hint())
     end,
-    icon = '   ',
+    icon = '   ',
+    -- icon = '   ',
     highlight = 'StatusLineLspDiagHint',
   }
 })

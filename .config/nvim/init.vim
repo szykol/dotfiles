@@ -88,19 +88,6 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
 let g:onedark_terminal_italics = 1
 
-if argv(0) ==# '.'
-    let g:netrw_browse_split = 0
-else
-    let g:netrw_browse_split = 4
-endif
-let g:netrw_banner = 0
-let g:netrw_winsize = 25
-
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.icons = v:false
-let bufferline.animation = v:false
-let bufferline.closable = v:false
-
 let g:signify_sign_change = '│'
 let g:signify_sign_add = '│'
 let g:signify_sign_delete = '│'
@@ -124,10 +111,8 @@ tno <silent> <C-j> <C-\><C-n><C-W>j
 tno <silent> <C-l> <C-\><C-n><C-W>l
 tno <silent> <C-k> <C-\><C-n><C-W>k
 
-nn <silent> <leader>sj :lua vim.lsp.diagnostic.goto_next()<CR>
-nn <silent> <leader>sk :lua vim.lsp.diagnostic.goto_prev()<CR>
-
 noremap <C-c> <c-[>
+" noremap <C-c> <Esc>
 nnoremap <silent> <leader>F <cmd>Telescope find_files<cr>
 nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
 nnoremap <silent> <leader>rg <cmd>Telescope grep_string<cr>
@@ -155,9 +140,6 @@ nmap <silent> <leader>db :lua require'dap'.toggle_breakpoint()<CR>
 
 nmap <silent> <leader>dt :lua require('dapui').toggle()<CR>
 
-" nmap <silent> <leader>d_ <Plug>VimspectorRestart
-" nmap <silent> <leader>de <Plug>VimspectorReset
-
 vnoremap <leader>p "_dP
 
 nnoremap <silent> <leader>h :wincmd h<CR>
@@ -174,12 +156,7 @@ nnoremap <silent> <leader>T :ToggleTerm<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
 
-" inoremap <silent><expr> <C-Space> compe#complete()
-" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-
 nnoremap <leader>P :lua require('utils').perform_upload()<CR>
-" nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
 
 nnoremap <silent><leader>t :NvimTreeToggle<CR>
 nnoremap <silent><leader>nr :NvimTreeRefresh<CR>
@@ -227,20 +204,20 @@ highlight SignifySignAdd guifg=#58d464
 highlight SignifySignChange ctermfg=180 guifg=#00F7FC
 highlight SignifySignDelete ctermfg=204 guifg=#E06C75
 
-highlight LspDiagnosticsDefaultError ctermfg=204 guifg=#E06C75
-highlight LspDiagnosticsDefaultInformation ctermfg=39 guifg=#61AFEF
-highlight LspDiagnosticsDefaultHint ctermfg=38 guifg=#56B6C2
-highlight LspDiagnosticsDefaultWarning ctermfg=180 guifg=#E5C07B
+highlight DiagnosticError ctermfg=204 guifg=#E06C75
+highlight DiagnosticInformation ctermfg=39 guifg=#61AFEF
+highlight DiagnosticHint ctermfg=38 guifg=#56B6C2
+highlight DiagnosticWarning ctermfg=180 guifg=#E5C07B
 
-highlight LspDiagnosticsUnderlineError cterm=underline ctermfg=204 gui=underline guifg=#E06C75
-highlight LspDiagnosticsUnderlineInformation cterm=underline ctermfg=39 gui=underline guifg=#61AFEF
-highlight LspDiagnosticsUnderlineHint cterm=underline ctermfg=38 gui=underline guifg=#56B6C2
-highlight LspDiagnosticsUnderlineWarning cterm=underline ctermfg=180 gui=underline guifg=#E5C07B
+highlight DiagnosticUnderlineError cterm=underline ctermfg=204 gui=undercurl guifg=#E06C75
+highlight DiagnosticUnderlineInformation cterm=underline ctermfg=39 gui=undercurl guifg=#61AFEF
+highlight DiagnosticUnderlineHint cterm=underline ctermfg=38 gui=undercurl guifg=#56B6C2
+highlight DiagnosticUnderlineWarning cterm=underline ctermfg=180 gui=undercurl guifg=#E5C07B
 
-highlight LspDiagnosticsVirtualTextError ctermfg=204 ctermbg=236 guifg=#E06C75 guibg=#2C323C
-highlight LspDiagnosticsVirtualTextInformation ctermfg=39 ctermbg=236 guifg=#61AFEF guibg=#2C323C
-highlight LspDiagnosticsVirtualTextHint ctermfg=38 ctermbg=236 guifg=#56B6C2 guibg=#2C323C
-highlight LspDiagnosticsVirtualTextWarning ctermfg=180 ctermbg=236 guifg=#E5C07B guibg=#2C323C
+highlight DiagnosticVirtualTextError ctermfg=204 ctermbg=236 guifg=#E06C75 guibg=#2C323C
+highlight DiagnosticVirtualTextInformation ctermfg=39 ctermbg=236 guifg=#61AFEF guibg=#2C323C
+highlight DiagnosticVirtualTextHint ctermfg=38 ctermbg=236 guifg=#56B6C2 guibg=#2C323C
+highlight DiagnosticVirtualTextWarning ctermfg=180 ctermbg=236 guifg=#E5C07B guibg=#2C323C
 
 highlight TelescopeResultsBorder guifg=#98c379
 highlight TelescopePreviewBorder guifg=#98c379
