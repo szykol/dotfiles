@@ -11,9 +11,6 @@ if !exists('g:vscode')
     Plug 'neovim/nvim-lspconfig'
 
     Plug 'tweekmonster/startuptime.vim'
-    " Plug 'mhartington/oceanic-next'
-    " Plug 'sainnhe/sonokai'
-    " Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
 
     Plug 'mhinz/vim-signify'
     Plug 'tpope/vim-fugitive'
@@ -23,28 +20,26 @@ if !exists('g:vscode')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'glepnir/galaxyline.nvim'
 
-    Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-project.nvim'
 
     Plug 'folke/lsp-trouble.nvim'
     Plug 'folke/todo-comments.nvim'
-    " Plug 'folke/zen-mode.nvim'
 
     Plug 'simrat39/symbols-outline.nvim'
     Plug 'psf/black'
     Plug 'onsails/lspkind-nvim'
     " Plug 'kosayoda/nvim-lightbulb'
+
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'navarasu/onedark.nvim'
-    " Plug 'projekt0n/github-nvim-theme'
     Plug 'kyazdani42/nvim-tree.lua'
 
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/nvim-cmp'
-
     Plug 'hrsh7th/cmp-vsnip'
     Plug 'hrsh7th/vim-vsnip'
     Plug 'hrsh7th/cmp-path'
@@ -52,10 +47,13 @@ if !exists('g:vscode')
     Plug 'f3fora/cmp-spell'
 
     Plug 'akinsho/toggleterm.nvim'
-    " Plug 'nvim-lualine/lualine.nvim'
+
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'mfussenegger/nvim-dap-python'
+
+    Plug 'mhinz/vim-startify'
+    Plug 'rafcamlet/tabline-framework.nvim'
 endif
 
 call plug#end()
@@ -78,9 +76,6 @@ set clipboard+=unnamedplus
 set noequalalways
 
 let &stl = " %f %m"
-let g:gruvbox_italicize_strings = 1
-let g:gruvbox_contrast_dark = 'hard'
-let g:edge_style = 'neon'
 
 colorscheme onedark
 
@@ -112,19 +107,20 @@ tno <silent> <C-l> <C-\><C-n><C-W>l
 tno <silent> <C-k> <C-\><C-n><C-W>k
 
 noremap <C-c> <c-[>
+inoremap <C-c> <Esc>
 " noremap <C-c> <Esc>
-nnoremap <silent> <leader>F <cmd>Telescope find_files<cr>
-nnoremap <silent> <leader>f <cmd>Telescope git_files<cr>
-nnoremap <silent> <leader>rg <cmd>Telescope grep_string<cr>
-nnoremap <silent> <leader>b <cmd>Telescope buffers<cr>
-nnoremap <silent> <leader>y <cmd>Telescope help_tags<cr>
-nnoremap <silent> <leader>g <cmd>Telescope git_branches<cr>
+nnoremap <silent> <leader>F <cmd>Telescope find_files theme=ivy<cr>
+nnoremap <silent> <leader>f <cmd>Telescope git_files theme=ivy<cr>
+nnoremap <silent> <leader>rg <cmd>Telescope grep_string theme=ivy<cr>
+nnoremap <silent> <leader>b <cmd>Telescope buffers theme=ivy<cr>
+nnoremap <silent> <leader>y <cmd>Telescope help_tags theme=ivy<cr>
+nnoremap <silent> <leader>g <cmd>Telescope git_branches theme=ivy<cr>
 " nnoremap <silent> <leader>t <cmd>Telescope file_browser<cr>
 
-nnoremap <silent> <leader>q :SymbolsOutline<CR>
-nnoremap <silent> <leader>e :LspTroubleToggle<CR>
+" nnoremap <silent> <leader>q :SymbolsOutline<CR>
+" nnoremap <silent> <leader>e :LspTroubleToggle<CR>
 nnoremap <silent> <leader>w :bd!<CR>
-nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gs :Git<CR>
 nnoremap <silent> <leader>gc :Git commit<CR>
 nnoremap <silent> <leader>gj <plug>(signify-next-hunk)
 nnoremap <silent> <leader>gk <plug>(signify-prev-hunk)
@@ -140,7 +136,7 @@ nmap <silent> <leader>db :lua require'dap'.toggle_breakpoint()<CR>
 
 nmap <silent> <leader>dt :lua require('dapui').toggle()<CR>
 
-vnoremap <leader>p "_dP
+nnoremap <leader>p :lua require'telescope'.extensions.project.project{}<CR>
 
 nnoremap <silent> <leader>h :wincmd h<CR>
 nnoremap <silent> <leader>l :wincmd l<CR>
@@ -151,6 +147,9 @@ nnoremap <silent> <C-h> :wincmd h<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
 nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
+
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 nnoremap <silent> <leader>T :ToggleTerm<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>

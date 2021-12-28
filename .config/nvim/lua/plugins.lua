@@ -126,6 +126,7 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require('telescope').setup{}
+require('telescope').load_extension('project')
 
 require("trouble").setup{}
 
@@ -181,3 +182,9 @@ dap_python.setup('~/.virtualenvs/debugpy/bin/python')
 dap_python.test_runner = "pytest"
 
 require("dapui").setup()
+
+require('tabline_framework').setup {
+  hl = { fg = "#abb2bf", bg ="#31353f" },
+  hl_sel = { fg = "#282c34", bg ="#abb2bf" },
+  hl_fill = { fg = "#282c34", bg ="#abb2bf" },
+}
