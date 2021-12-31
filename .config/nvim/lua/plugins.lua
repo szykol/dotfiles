@@ -37,14 +37,14 @@ cmp.setup({
     },
     cmp.setup.cmdline('/', {
       sources = {
-        { name = 'buffer' }
+        { name = 'buffer', keyword_length = 2 }
       }
     }),
     cmp.setup.cmdline(':', {
       sources = cmp.config.sources({
-        { name = 'path' }
+        { name = 'path', keyword_length = 2 }
       }, {
-        { name = 'cmdline' }
+        { name = 'cmdline', keyword_length = 2 }
       })
   })
 })
