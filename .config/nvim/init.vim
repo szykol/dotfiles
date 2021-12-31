@@ -37,14 +37,16 @@ if !exists('g:vscode')
     Plug 'navarasu/onedark.nvim'
     Plug 'kyazdani42/nvim-tree.lua'
 
+    Plug 'L3MON4D3/LuaSnip'
+
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
+    Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'hrsh7th/nvim-cmp'
-    Plug 'hrsh7th/cmp-vsnip'
-    Plug 'hrsh7th/vim-vsnip'
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-calc'
     Plug 'f3fora/cmp-spell'
+    Plug 'hrsh7th/cmp-cmdline'
 
     Plug 'akinsho/toggleterm.nvim'
 
@@ -54,6 +56,10 @@ if !exists('g:vscode')
 
     Plug 'mhinz/vim-startify'
     Plug 'rafcamlet/tabline-framework.nvim'
+    Plug 'jubnzv/virtual-types.nvim'
+    Plug 'tami5/lspsaga.nvim'
+    Plug 'jose-elias-alvarez/null-ls.nvim'
+    Plug 'ThePrimeagen/refactoring.nvim'
 endif
 
 call plug#end()
@@ -74,6 +80,7 @@ set nohlsearch
 set completeopt=menu,menuone,noselect
 set clipboard+=unnamedplus
 set noequalalways
+set guifont=JetBrains\ Mono:h14,FiraCode\ Nerd\ Font:h14
 
 let &stl = " %f %m"
 
@@ -160,6 +167,7 @@ nnoremap <leader>P :lua require('utils').perform_upload()<CR>
 nnoremap <silent><leader>t :NvimTreeToggle<CR>
 nnoremap <silent><leader>nr :NvimTreeRefresh<CR>
 nnoremap <silent><leader>nn :NvimTreeFindFile<CR>
+vnoremap <silent><leader>rr :<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>
 
 if exists('g:vscode')
     nnoremap <silent> <leader>h :call VSCodeNotify('workbench.action.navigateLeft')<CR>
