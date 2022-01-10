@@ -18,7 +18,7 @@ if !exists('g:vscode')
     " Plug 'puremourning/vimspector'
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'glepnir/galaxyline.nvim'
+    Plug 'NTBBloodbath/galaxyline.nvim'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -80,7 +80,7 @@ set nohlsearch
 set completeopt=menu,menuone,noselect
 set clipboard+=unnamedplus
 set noequalalways
-set guifont=JetBrains\ Mono:h14,FiraCode\ Nerd\ Font:h14
+set guifont=FiraCode\ Nerd\ Font:h14
 
 let &stl = " %f %m"
 
@@ -99,7 +99,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
-    luafile ~/.config/nvim/lua/statusline.lua
+    luafile ~/.config/nvim/lua/statusline_squared.lua
 endif
 
 set lcs=trail:.,tab:>-
