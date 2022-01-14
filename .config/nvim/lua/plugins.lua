@@ -272,3 +272,7 @@ local sources = {
 }
 
 null_ls.setup({ sources = sources })
+
+require("gitsigns").setup {
+    current_line_blame = false
+}

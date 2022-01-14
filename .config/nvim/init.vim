@@ -12,13 +12,14 @@ if !exists('g:vscode')
 
     Plug 'tweekmonster/startuptime.vim'
 
-    Plug 'mhinz/vim-signify'
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'tpope/vim-fugitive'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     " Plug 'puremourning/vimspector'
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'NTBBloodbath/galaxyline.nvim'
+    " Plug 'NTBBloodbath/galaxyline.nvim'
+    Plug 'rebelot/heirline.nvim'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -99,7 +100,8 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
-    luafile ~/.config/nvim/lua/statusline_squared.lua
+    " luafile ~/.config/nvim/lua/statusline_squared.lua
+    luafile ~/.config/nvim/lua/heirline_statusline.lua
 endif
 
 set lcs=trail:.,tab:>-
