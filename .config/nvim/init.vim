@@ -61,6 +61,7 @@ if !exists('g:vscode')
     Plug 'tami5/lspsaga.nvim'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ThePrimeagen/refactoring.nvim'
+    Plug 'nvim-lua/lsp-status.nvim'
 endif
 
 call plug#end()
