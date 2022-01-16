@@ -46,7 +46,7 @@ local ViMode = {
             nt = "Nt",
             v = "V",
             vs = "Vs",
-            V = "V_",
+            V = "Vb",
             Vs = "Vs",
             ["^V"] = "^V",
             ["^Vs"] = "^V",
@@ -71,8 +71,8 @@ local ViMode = {
             t = "T",
         },
         mode_colors = {
-            n = colors.red ,
-            i = colors.green,
+            n = colors.red,
+            i = colors.blue,
             v = colors.cyan,
             V =  colors.cyan,
             ["^V"] =  colors.cyan,
@@ -94,7 +94,7 @@ local ViMode = {
     -- control the padding and make sure our string is always at least 2
     -- characters long. Plus a nice Icon.
     provider = function(self)
-        return " %2("..self.mode_names[self.mode].."%)"
+        return self.mode_names[self.mode]
     end,
     -- Same goes for the highlight. Now the foreground will change according to the current mode.
     hl = function(self)
@@ -133,20 +133,25 @@ local FileIcon = {
     end
 }
 
+local function get_file_name(self)
+    local filename = vim.fn.fnamemodify(self.filename, ":.")
+    if filename == "" then return "[No Name]" end
+    -- now, if the filename would occupy more than 1/4th of the available
+    -- space, we trim the file path to its initials
+    if not conditions.width_percent_below(#filename, 0.25) then
+        filename = vim.fn.pathshorten(filename)
+    end
+    return filename
+end
+
 local FileName = {
-    provider = function(self)
-        -- first, trim the pattern relative to the current directory. For other
-        -- options, see :h filename-modifers
-        local filename = vim.fn.fnamemodify(self.filename, ":.")
-        if filename == "" then return "[No Name]" end
-        -- now, if the filename would occupy more than 1/4th of the available
-        -- space, we trim the file path to its initials
-        if not conditions.width_percent_below(#filename, 0.25) then
-            filename = vim.fn.pathshorten(filename)
-        end
-        return filename
-    end,
-    hl = { fg = utils.get_highlight("Directory").fg },
+    provider = get_file_name,
+    hl = { fg = utils.get_highlight("Directory").fg, style="italic,bold" },
+}
+
+local FileNameInactive = {
+    provider = get_file_name,
+    hl = { fg = "#AAAAAA", style = "bold" },
 }
 
 local FileFlags = {
@@ -175,9 +180,16 @@ local FileNameModifer = {
 }
 
 -- let's add the children to our FileNameBlock component
-FileNameBlock = utils.insert(FileNameBlock,
+FileNameBlockActive = utils.insert(FileNameBlock,
     FileIcon,
     utils.insert(FileNameModifer, FileName), -- a new table where FileName is a child of FileNameModifier
+    unpack(FileFlags), -- A small optimisation, since their parent does nothing
+    { provider = '%<'} -- this means that the statusline is cut here when there's not enough space
+)
+
+FileNameBlockInactive = utils.insert(FileNameBlock,
+    FileIcon,
+    utils.insert(FileNameModifer, FileNameInactive), -- a new table where FileName is a child of FileNameModifier
     unpack(FileFlags), -- A small optimisation, since their parent does nothing
     { provider = '%<'} -- this means that the statusline is cut here when there's not enough space
 )
@@ -195,47 +207,52 @@ local Git = {
 
     hl = { fg = colors.orange },
 
-
+    Space,
+    Space,
     {   -- git branch name
         provider = function(self)
             return " " .. self.status_dict.head
         end,
         hl = {style = 'bold'}
     },
-    -- You could handle delimiters, icons and counts similar to Diagnostics
-    {
-        condition = function(self)
-            return self.has_changes
-        end,
-        provider = "("
-    },
     {
         provider = function(self)
             local count = self.status_dict.added or 0
-            return count > 0 and ("+" .. count)
+            return count > 0 and (" +" .. count)
         end,
-        hl = { fg = colors.git.add },
+        hl = { fg = colors.git.add, style="bold"},
     },
     {
         provider = function(self)
             local count = self.status_dict.removed or 0
-            return count > 0 and ("-" .. count)
+            return count > 0 and (" -" .. count)
         end,
-        hl = { fg = colors.git.del },
+        hl = { fg = colors.git.del, style="bold" },
     },
     {
         provider = function(self)
             local count = self.status_dict.changed or 0
-            return count > 0 and ("~" .. count)
+            return count > 0 and (" ~" .. count)
         end,
-        hl = { fg = colors.git.change },
+        hl = { fg = colors.git.change, style="bold" },
     },
-    {
-        condition = function(self)
-            return self.has_changes
-        end,
-        provider = ")",
-    },
+}
+
+local LSPActive = {
+    condition = conditions.lsp_attached,
+
+    -- You can keep it simple,
+    -- provider = " [LSP]",
+
+    -- Or complicate things a bit and get the servers names
+    provider  = function()
+        local names = {}
+        for i, server in ipairs(vim.lsp.buf_get_clients(0)) do
+            table.insert(names, server.name)
+        end
+        return " [" .. table.concat(names, " ") .. "]"
+    end,
+    hl = { fg = colors.green, style = "bold" },
 }
 
 local Diagnostics = {
@@ -256,66 +273,42 @@ local Diagnostics = {
         self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
     end,
 
-    {
-        provider = "![",
-    },
+    Space,
+    LSPActive,
     {
         provider = function(self)
             -- 0 is just another output, we can decide to print it or not!
-            return self.errors > 0 and (self.error_icon .. self.errors .. " ")
+            return self.errors > 0 and (" " .. self.error_icon .. self.errors)
         end,
         hl = { fg = colors.diag.error },
     },
     {
         provider = function(self)
-            return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+            return self.warnings > 0 and (" " .. self.warn_icon .. self.warnings)
         end,
         hl = { fg = colors.diag.warn },
     },
     {
         provider = function(self)
-            return self.info > 0 and (self.info_icon .. self.info .. " ")
+            return self.info > 0 and (" " .. self.info_icon .. self.info)
         end,
         hl = { fg = colors.diag.info },
     },
     {
         provider = function(self)
-            return self.hints > 0 and (self.hint_icon .. self.hints)
+            return self.hints > 0 and (" " .. self.hint_icon .. self.hints)
         end,
         hl = { fg = colors.diag.hint },
     },
-    {
-        provider = "]",
-    },
 }
 
 
-local LSPActive = {
-    condition = conditions.lsp_attached,
 
-    -- You can keep it simple,
-    -- provider = " [LSP]",
-
-    -- Or complicate things a bit and get the servers names
-    provider  = function()
-        local names = {}
-        for i, server in ipairs(vim.lsp.buf_get_clients(0)) do
-            table.insert(names, server.name)
-        end
-        return " [" .. table.concat(names, " ") .. "]"
-    end,
-    hl = { fg = colors.green, style = "bold" },
-}
-
-local LSPMessages = {
-    provider = function() return require("lsp-status").status() end,
-    hl = { fg = colors.gray },
-}
-
--- local DefaultStatusline = {
---     Space, ViMode, Space, FileNameBlock, Space,
+-- local LSPMessages = {
+--     provider = function() return require("lsp-status").status() end,
+--     hl = { fg = colors.gray },
 -- }
---
+
 local Ruler = {
     -- %l = current line number
     -- %L = number of lines in the buffer
@@ -325,22 +318,22 @@ local Ruler = {
 }
 
 -- I take no credits for this! :lion:
-local ScrollBar ={
-    static = {
-        sbar = { '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█' }
-    },
-    provider = function(self)
-        local curr_line = vim.api.nvim_win_get_cursor(0)[1]
-        local lines = vim.api.nvim_buf_line_count(0)
-        local i = math.floor(curr_line / lines * (#self.sbar - 1)) + 1
-        return string.rep(self.sbar[i], 2)
-    end
-}
+-- local ScrollBar ={
+--     static = {
+--         sbar = { '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█' }
+--     },
+--     provider = function(self)
+--         local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+--         local lines = vim.api.nvim_buf_line_count(0)
+--         local i = math.floor(curr_line / lines * (#self.sbar - 1)) + 1
+--         return string.rep(self.sbar[i], 2)
+--     end
+-- }
 
 local DefaultStatusline = {
-    Space, ViMode, Space, FileNameBlock, Space, Git, Space, Diagnostics, Align,
+    Space, ViMode, Space, FileNameBlockActive, Git, Space, Diagnostics, Align,
     Align,
-    LSPActive, Space, LSPMessages, Space, FileType, Space, Ruler, Space, ScrollBar
+    Space, FileType, Space, Ruler, Space
 }
 
 local InactiveStatusline = {
@@ -348,7 +341,7 @@ local InactiveStatusline = {
         return not conditions.is_active()
     end,
 
-    Space, FileNameBlock, Align,
+    Space, FileNameBlockInactive, Align,
 }
 
 local HelpFileName = {
@@ -400,13 +393,13 @@ local StatusLines = {
     hl = function()
         if conditions.is_active() then
             return {
-                fg = utils.get_highlight("StatusLine").fg,
-                bg = utils.get_highlight("StatusLine").bg
+                fg = utils.get_highlight("ColorColumn").fg,
+                bg = utils.get_highlight("ColorColumn").bg
             }
         else
             return {
                 fg = utils.get_highlight("StatusLineNC").fg,
-                bg = utils.get_highlight("StatusLineNC").bg
+                bg = utils.get_highlight("StatusLineNC").bg,
             }
         end
     end,
