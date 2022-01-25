@@ -54,6 +54,8 @@ if !exists('g:vscode')
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'mfussenegger/nvim-dap-python'
+    Plug 'vim-test/vim-test'
+    Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
 
     Plug 'mhinz/vim-startify'
     Plug 'rafcamlet/tabline-framework.nvim'
@@ -82,7 +84,7 @@ set nohlsearch
 set completeopt=menu,menuone,noselect
 set clipboard+=unnamedplus
 set noequalalways
-set guifont=FiraCode\ Nerd\ Font:h14
+set guifont=JetBrainsMono\ NF:h9
 
 let &stl = " %f %m"
 

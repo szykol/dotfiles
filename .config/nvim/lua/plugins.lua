@@ -87,7 +87,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local servers = {'vimls', 'rust_analyzer', 'clangd', 'texlab', 'tsserver' }
+local servers = { 'pyright', 'vimls', 'rust_analyzer', 'clangd', 'texlab', 'tsserver' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -98,46 +98,11 @@ for _, lsp in ipairs(servers) do
   }
 end
 
-nvim_lsp['pyright'].setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = {
-    debounce_text_changes = 150,
-  },
-  on_init = function(client)
-    local orig_rpc_request = client.rpc.request
-    function client.rpc.request(method, params, handler, ...)
-      local orig_handler = handler
-      if method == 'textDocument/completion' then
-        -- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
-        handler = function(...)
-          local err, result = ...
-          if not err and result then
-            local items = result.items or result
-            for _, item in ipairs(items) do
-              if not (item.data and item.data.funcParensDisabled) and (
-                item.kind == vim.lsp.protocol.CompletionItemKind.Function or
-                item.kind == vim.lsp.protocol.CompletionItemKind.Method or
-                item.kind == vim.lsp.protocol.CompletionItemKind.Constructor
-              ) then
-                item.insertText = item.label .. '($1)$0'
-                item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
-              end
-            end
-          end
-          return orig_handler(...)
-        end
-      end
-      return orig_rpc_request(method, params, handler, ...)
-    end
-  end;
-})
-
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = true,
     signs = true,
-    update_in_insert = true,
+    update_in_insert = false,
   }
 )
 
