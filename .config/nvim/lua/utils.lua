@@ -136,6 +136,13 @@ local function perform_upload()
   Job:new(cmd):start()
 end
 
+local function open_terminal()
+  vim.cmd("bot sp")
+  vim.cmd("resize 15")
+  vim.cmd("term")
+end
+
 return {
-  perform_upload = perform_upload
+  perform_upload = perform_upload,
+  open_terminal = open_terminal
 }

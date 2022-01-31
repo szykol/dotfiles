@@ -138,6 +138,8 @@ nnoremap <silent> <leader>gj <plug>(signify-next-hunk)
 nnoremap <silent> <leader>gk <plug>(signify-prev-hunk)
 nnoremap <silent> <leader>m :MaximizerToggle!<CR>
 nnoremap <silent> <leader>v :vsplit<cr>
+nnoremap <silent> <leader>s :split<cr>
+nnoremap <silent> <leader>S :bot split<cr>:resize 10<cr>
 nnoremap <silent> <leader>dd :call vimspector#Launch()<CR>
 
 nmap <silent> <leader>dl :lua require'dap'.step_into()<CR>
@@ -163,15 +165,17 @@ nnoremap <silent> <C-k> :wincmd k<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-nnoremap <silent> <leader>T :ToggleTerm<CR>
+nnoremap <silent> <leader>T :lua require('utils').open_terminal()<CR>
+nnoremap <silent> <leader>t :term<CR>
+
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
 
 nnoremap <leader>P :lua require('utils').perform_upload()<CR>
 
-nnoremap <silent><leader>t :NvimTreeToggle<CR>
+nnoremap <silent><leader>nt :NvimTreeToggle<CR>
 nnoremap <silent><leader>nr :NvimTreeRefresh<CR>
-nnoremap <silent><leader>nn :NvimTreeFindFile<CR>
+nnoremap <silent><leader>nf :NvimTreeFindFile<CR>
 vnoremap <silent><leader>rr :<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>
 
 if exists('g:vscode')
@@ -217,19 +221,19 @@ highlight SignifySignChange ctermfg=180 guifg=#00F7FC
 highlight SignifySignDelete ctermfg=204 guifg=#E06C75
 
 highlight DiagnosticError ctermfg=204 guifg=#E06C75
-highlight DiagnosticInformation ctermfg=39 guifg=#61AFEF
+highlight DiagnosticInfo ctermfg=39 guifg=#61AFEF
 highlight DiagnosticHint ctermfg=38 guifg=#56B6C2
-highlight DiagnosticWarning ctermfg=180 guifg=#E5C07B
+highlight DiagnosticWarn ctermfg=180 guifg=#E5C07B
 
 highlight DiagnosticUnderlineError cterm=underline ctermfg=204 gui=undercurl guifg=#E06C75
-highlight DiagnosticUnderlineInformation cterm=underline ctermfg=39 gui=undercurl guifg=#61AFEF
+highlight DiagnosticUnderlineInfo cterm=underline ctermfg=39 gui=undercurl guifg=#61AFEF
 highlight DiagnosticUnderlineHint cterm=underline ctermfg=38 gui=undercurl guifg=#56B6C2
-highlight DiagnosticUnderlineWarning cterm=underline ctermfg=180 gui=undercurl guifg=#E5C07B
+highlight DiagnosticUnderlineWarn cterm=underline ctermfg=180 gui=undercurl guifg=#E5C07B
 
 highlight DiagnosticVirtualTextError ctermfg=204 ctermbg=236 guifg=#E06C75 guibg=#2C323C
-highlight DiagnosticVirtualTextInformation ctermfg=39 ctermbg=236 guifg=#61AFEF guibg=#2C323C
+highlight DiagnosticVirtualTextInfo ctermfg=39 ctermbg=236 guifg=#61AFEF guibg=#2C323C
 highlight DiagnosticVirtualTextHint ctermfg=38 ctermbg=236 guifg=#56B6C2 guibg=#2C323C
-highlight DiagnosticVirtualTextWarning ctermfg=180 ctermbg=236 guifg=#E5C07B guibg=#2C323C
+highlight DiagnosticVirtualTextWarn ctermfg=180 ctermbg=236 guifg=#E5C07B guibg=#2C323C
 
 highlight TelescopeResultsBorder guifg=#98c379
 highlight TelescopePreviewBorder guifg=#98c379
