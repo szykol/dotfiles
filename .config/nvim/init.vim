@@ -15,10 +15,8 @@ if !exists('g:vscode')
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'tpope/vim-fugitive'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    " Plug 'puremourning/vimspector'
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
-    " Plug 'NTBBloodbath/galaxyline.nvim'
     Plug 'rebelot/heirline.nvim'
 
     Plug 'nvim-lua/plenary.nvim'
@@ -31,7 +29,6 @@ if !exists('g:vscode')
     Plug 'simrat39/symbols-outline.nvim'
     Plug 'psf/black'
     Plug 'onsails/lspkind-nvim'
-    " Plug 'kosayoda/nvim-lightbulb'
 
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'ray-x/lsp_signature.nvim'
@@ -39,7 +36,6 @@ if !exists('g:vscode')
     Plug 'kyazdani42/nvim-tree.lua'
 
     Plug 'L3MON4D3/LuaSnip'
-
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
     Plug 'saadparwaiz1/cmp_luasnip'
@@ -49,7 +45,6 @@ if !exists('g:vscode')
     Plug 'f3fora/cmp-spell'
     Plug 'hrsh7th/cmp-cmdline'
 
-    Plug 'akinsho/toggleterm.nvim'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
@@ -85,25 +80,18 @@ set completeopt=menu,menuone,noselect
 set clipboard+=unnamedplus
 set noequalalways
 set guifont=JetBrainsMono\ NF:h9
+set pumheight=10
 
 let &stl = " %f %m"
 
 colorscheme onedark
 
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:python3_host_prog = '/usr/bin/python3'
-let g:onedark_terminal_italics = 1
-
-let g:signify_sign_change = '│'
-let g:signify_sign_add = '│'
-let g:signify_sign_delete = '│'
-let g:signify_priority = 5
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
-    " luafile ~/.config/nvim/lua/statusline_squared.lua
     luafile ~/.config/nvim/lua/heirline_statusline.lua
 endif
 
@@ -120,17 +108,12 @@ tno <silent> <C-k> <C-\><C-n><C-W>k
 
 noremap <C-c> <c-[>
 inoremap <C-c> <Esc>
-" noremap <C-c> <Esc>
 nnoremap <silent> <leader>F <cmd>Telescope find_files theme=ivy<cr>
 nnoremap <silent> <leader>f <cmd>Telescope git_files theme=ivy<cr>
 nnoremap <silent> <leader>rg <cmd>Telescope grep_string theme=ivy<cr>
 nnoremap <silent> <leader>b <cmd>Telescope buffers theme=ivy<cr>
 nnoremap <silent> <leader>y <cmd>Telescope help_tags theme=ivy<cr>
 nnoremap <silent> <leader>g <cmd>Telescope git_branches theme=ivy<cr>
-" nnoremap <silent> <leader>t <cmd>Telescope file_browser<cr>
-
-" nnoremap <silent> <leader>q :SymbolsOutline<CR>
-" nnoremap <silent> <leader>e :LspTroubleToggle<CR>
 nnoremap <silent> <leader>w :bd!<CR>
 nnoremap <silent> <leader>gs :Git<CR>
 nnoremap <silent> <leader>gc :Git commit<CR>
@@ -140,37 +123,25 @@ nnoremap <silent> <leader>m :MaximizerToggle!<CR>
 nnoremap <silent> <leader>v :vsplit<cr>
 nnoremap <silent> <leader>s :split<cr>
 nnoremap <silent> <leader>S :bot split<cr>:resize 10<cr>
-nnoremap <silent> <leader>dd :call vimspector#Launch()<CR>
 
-nmap <silent> <leader>dl :lua require'dap'.step_into()<CR>
-nmap <silent> <leader>dj :lua require'dap'.step_over()<CR>
-nmap <silent> <leader>dk :lua require'dap'.step_out()<CR>
-nmap <silent> <leader>dg :lua require'dap'.continue()<CR>
-nmap <silent> <leader>db :lua require'dap'.toggle_breakpoint()<CR>
-
-nmap <silent> <leader>dt :lua require('dapui').toggle()<CR>
+nnoremap <silent> <leader>dl :lua require'dap'.step_into()<CR>
+nnoremap <silent> <leader>dj :lua require'dap'.step_over()<CR>
+nnoremap <silent> <leader>dk :lua require'dap'.step_out()<CR>
+nnoremap <silent> <leader>dg :lua require'dap'.continue()<CR>
+nnoremap <silent> <leader>db :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> <leader>dt :lua require('dapui').toggle()<CR>
 
 nnoremap <leader>p :lua require'telescope'.extensions.project.project{}<CR>
-
-nnoremap <silent> <leader>h :wincmd h<CR>
-nnoremap <silent> <leader>l :wincmd l<CR>
-nnoremap <silent> <leader>j :wincmd j<CR>
-nnoremap <silent> <leader>k :wincmd k<CR>
 
 nnoremap <silent> <C-h> :wincmd h<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
 nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
 
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
 nnoremap <silent> <leader>T :lua require('utils').open_terminal()<CR>
 nnoremap <silent> <leader>t :term<CR>
-
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
-
 nnoremap <leader>P :lua require('utils').perform_upload()<CR>
 
 nnoremap <silent><leader>nt :NvimTreeToggle<CR>
@@ -208,17 +179,13 @@ augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
     " autocmd BufWritePost *.py :silent Black
-    " autocmd BufWritePost * :lua require('utils').perform_upload()
+    autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
     autocmd FileType python nmap <buffer> <silent> <leader>dn :lua require'dap-python'.test_method()<CR>
     autocmd FileType python nmap <buffer> <silent> <leader>dc :lua require'dap-python'.test_class()<CR>
     autocmd FileType python nmap <silent> <leader>ds <ESC>:lua require('dap-python').debug_selection()<CR>
 augroup END
-
-highlight SignifySignAdd guifg=#58d464
-highlight SignifySignChange ctermfg=180 guifg=#00F7FC
-highlight SignifySignDelete ctermfg=204 guifg=#E06C75
 
 highlight DiagnosticError ctermfg=204 guifg=#E06C75
 highlight DiagnosticInfo ctermfg=39 guifg=#61AFEF
@@ -237,5 +204,3 @@ highlight DiagnosticVirtualTextWarn ctermfg=180 ctermbg=236 guifg=#E5C07B guibg=
 
 highlight TelescopeResultsBorder guifg=#98c379
 highlight TelescopePreviewBorder guifg=#98c379
-
-"  master

@@ -9,8 +9,8 @@ cmp.setup({
       end,
     },
     mapping = {
-      ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
       ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
       ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
       ['<C-e>'] = cmp.mapping({
@@ -67,8 +67,6 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  -- testing this out, might eventually move back to previous mechanism
-  -- buf_set_keymap('n', 'gd', '<cmd>lua require"lspsaga.provider".preview_definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<cmd>lua require("lspsaga.hover").render_hover_doc()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
@@ -183,27 +181,6 @@ for type, icon in pairs(signs) do
 end
 
 require"nvim-tree".setup {}
-require("toggleterm").setup{
-  -- size can be a number or function which is passed the current terminal
-  size = 10 or function(term)
-    if term.direction == "horizontal" then
-      return 15
-    elseif term.direction == "vertical" then
-      return vim.o.columns * 0.4
-    end
-  end,
-  open_mapping = [[<c-\>]],
-  hide_numbers = true, -- hide the number column in toggleterm buffers
-  shade_filetypes = {},
-  shade_terminals = false,
-  start_in_insert = false,
-  insert_mappings = true, -- whether or not the open mapping applies in insert mode
-  persist_size = true,
-  direction = 'horizontal',
-  close_on_exit = true, -- close the terminal window when the process exits
-  shell = vim.o.shell, -- change the default shell
-  -- This field is only relevant if direction is set to 'float'
-}
 
 local dap_python = require('dap-python')
 dap_python.setup('~/.virtualenvs/debugpy/bin/python')

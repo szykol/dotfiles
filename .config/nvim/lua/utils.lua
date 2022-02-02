@@ -117,8 +117,14 @@ local function perform_upload()
 
   local config_errors = validate_config(config)
   if next(config_errors) ~= nil then
-    local errors = table.concat(config_errors, ",")
-    print("[sftp] config errors: " .. errors)
+    if config_errors[1] ~= "No config" then
+        local errors = table.concat(config_errors, ",")
+        local timer = vim.loop.new_timer()
+        -- NOTE: launching timer so messages don't stack on each other and require pressing <ENTER> to continue
+        timer:start(150, 0, vim.schedule_wrap(function()
+            print("[sftp] config errors: " .. errors)
+        end))
+    end
     return
   end
 
