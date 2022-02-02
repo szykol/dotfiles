@@ -23,9 +23,8 @@ local function split(inputstr, sep)
   return string.gmatch(inputstr, "([^"..sep.."]+)")
 end
 
-local function load_sftp_config(cwd)
-  local path = Path:new(cwd .. "/.sftp")
-  if not path:exists() then
+local function load_sftp_config(path)
+  if not path or not path:exists() then
       return nil
   end
 
@@ -68,7 +67,8 @@ local function validate_config(config)
 end
 
 local function build_sftp_cmd(config)
-  local relative_file = vim.fn.fnamemodify(vim.fn.expand("%"), ":~:.")
+  local relative_file = config.relative_file
+  local absolute_filepath = config.absolute_filepath
   local cwd = vim.fn.getcwd()
   local target_host = config.host
   local user = config.user
@@ -76,7 +76,7 @@ local function build_sftp_cmd(config)
 
   local parent_path = Path:new(target_path):parent()
 
-  local args = {user .. "@" .. target_host .. ":" .. parent_path .. "<<< $\'put " .. relative_file .. "\'"}
+  local args = {user .. "@" .. target_host .. ":" .. parent_path .. "<<< $\'put " .. absolute_filepath .. "\'"}
 
   return {
     command = "sftp",
@@ -86,12 +86,13 @@ local function build_sftp_cmd(config)
 end
 
 local function build_scp_cmd(config)
-  local relative_file = vim.fn.fnamemodify(vim.fn.expand("%"), ":~:.")
+  local relative_file = config.relative_file
+  local absolute_filepath = config.absolute_filepath
   local cwd = vim.fn.getcwd()
   local target_host = config.host
   local target_path = config.target_path .. relative_file
   local user = config.user
-  local args = {relative_file, user .. "@" .. target_host .. ':' .. target_path}
+  local args = {absolute_filepath, user .. "@" .. target_host .. ':' .. target_path}
 
   return {
     command = "scp",
@@ -109,13 +110,38 @@ local function build_cmd(config)
   end
 end
 
+local function find_config(absolute_filepath, opts)
+  opts = opts or {}
+  local depth = opts.depth or 5 -- max 5 ancestors
+  local stop_on_git = opts.stop_on_git
+  if stop_on_git == nil then
+    stop_on_git = true
+  end
+
+  local i = 0
+  local parent = absolute_filepath:parent()
+  while i < depth do
+    local sftp_path = Path:new(parent .. "/.sftp")
+    if sftp_path:exists() then
+      return sftp_path
+    end
+    local git_path = Path:new(parent .. "/.git")
+    if git_path:exists() and stop_on_git then
+      return nil
+    end
+    parent = parent:parent()
+    i = i + 1
+  end
+end
+
+-- TODO: async
 local function perform_upload()
   local relative_file = vim.fn.fnamemodify(vim.fn.expand("%"), ":~:.")
-  local cwd = vim.fn.getcwd()
-
-  local config = load_sftp_config(cwd)
-
+  local absolute_filepath = Path:new(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":~:."))
+  local config_path = find_config(absolute_filepath)
+  local config = load_sftp_config(config_path)
   local config_errors = validate_config(config)
+
   if next(config_errors) ~= nil then
     if config_errors[1] ~= "No config" then
         local errors = table.concat(config_errors, ",")
@@ -130,15 +156,14 @@ local function perform_upload()
 
   config.mode = config.mode or "sftp"
   config.mode = "scp"
+  config.relative_file = relative_file
+  config.absolute_filepath = absolute_filepath
 
   local cmd = build_cmd(config)
   cmd.on_exit = function(_, return_val)
     local result = (return_val == 0 and "success") or "error"
     print("[sftp] sending " .. relative_file .. " " .. result)
   end
-
-  -- print(vim.inspect(cmd))
-
   Job:new(cmd):start()
 end
 
