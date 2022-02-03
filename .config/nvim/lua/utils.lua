@@ -92,7 +92,7 @@ local function build_scp_cmd(config)
   local target_host = config.host
   local target_path = config.target_path .. relative_file
   local user = config.user
-  local args = {absolute_filepath, user .. "@" .. target_host .. ':' .. target_path}
+  local args = {tostring(absolute_filepath), user .. "@" .. target_host .. ':' .. target_path}
 
   return {
     command = "scp",
@@ -134,10 +134,32 @@ local function find_config(absolute_filepath, opts)
   end
 end
 
+local function find_project_root(absolute_filepath, opts)
+  opts = opts or {}
+  local depth = opts.depth or 10 -- max 5 ancestors
+  local i = 0
+  local parent = absolute_filepath:parent()
+  while i < depth do
+    local git_path = Path:new(parent .. "/.git")
+    if git_path:exists() then
+      return parent
+    end
+    parent = parent:parent()
+    i = i + 1
+  end
+end
+
+local function find_relative_file(opts)
+  local absolute_filepath = Path:new(vim.fn.expand("%:p"))
+  local project_root = find_project_root(absolute_filepath, opts)
+  local relative_file = absolute_filepath:make_relative(tostring(project_root))
+  return relative_file
+end
+
 -- TODO: async
 local function perform_upload()
-  local relative_file = vim.fn.fnamemodify(vim.fn.expand("%"), ":~:.")
-  local absolute_filepath = Path:new(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":~:."))
+  local absolute_filepath = Path:new(vim.fn.expand("%:p"))
+  local relative_file = find_relative_file()
   local config_path = find_config(absolute_filepath)
   local config = load_sftp_config(config_path)
   local config_errors = validate_config(config)
