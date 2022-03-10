@@ -85,7 +85,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local servers = { 'pyright', 'vimls', 'rust_analyzer', 'clangd', 'texlab', 'tsserver' }
+local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -96,6 +96,53 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+require("clangd_extensions").setup {
+  server = {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      flags = {
+        debounce_text_changes = 150,
+      }
+  },
+  extensions = {
+    -- defaults:
+    -- Automatically set inlay hints (type hints)
+    autoSetHints = true,
+    -- Whether to show hover actions inside the hover window
+    -- This overrides the default hover handler
+    hover_with_actions = true,
+    -- These apply to the default ClangdSetInlayHints command
+    inlay_hints = {
+      -- Only show inlay hints for the current line
+      only_current_line = false,
+      -- Event which triggers a refersh of the inlay hints.
+      -- You can make this "CursorMoved" or "CursorMoved,CursorMovedI" but
+      -- not that this may cause  higher CPU usage.
+      -- This option is only respected when only_current_line and
+      -- autoSetHints both are true.
+      only_current_line_autocmd = "CursorHold",
+      -- wheter to show parameter hints with the inlay hints or not
+      show_parameter_hints = true,
+      -- whether to show variable name before type hints with the inlay hints or not
+      show_variable_name = false,
+      -- prefix for parameter hints
+      parameter_hints_prefix = "<- ",
+      -- prefix for all the other hints (type, chaining)
+      other_hints_prefix = "=> ",
+      -- whether to align to the length of the longest line in the file
+      max_len_align = false,
+      -- padding from the left if max_len_align is true
+      max_len_align_padding = 1,
+      -- whether to align to the extreme right or not
+      right_align = false,
+      -- padding from the right if right_align is true
+      right_align_padding = 7,
+      -- The color of the hints
+      highlight = "Comment",
+    },
+  }
+}
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = true,
@@ -104,42 +151,42 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
-local system_name
-if vim.fn.has("mac") == 1 then
-  system_name = "macOS"
-elseif vim.fn.has("unix") == 1 then
-  system_name = "Linux"
-elseif vim.fn.has('win32') == 1 then
-  system_name = "Windows"
-else
-  print("Unsupported system for sumneko")
-end
+-- local system_name
+-- if vim.fn.has("mac") == 1 then
+--   system_name = "macOS"
+-- elseif vim.fn.has("unix") == 1 then
+--   system_name = "Linux"
+-- elseif vim.fn.has('win32') == 1 then
+--   system_name = "Windows"
+-- else
+--   print("Unsupported system for sumneko")
+-- end
 
-local home = vim.fn.expand('$HOME')
-local sumneko_root_path = home .. '/dev/lua-language-server'
-local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
+-- local home = vim.fn.expand('$HOME')
+-- local sumneko_root_path = home .. '/dev/lua-language-server'
+-- local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
 
-require'lspconfig'.sumneko_lua.setup {
-  on_attach = on_attach,
-  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-        path = vim.split(package.path, ';'),
-      },
-      diagnostics = {
-        globals = {'vim'},
-      },
-      workspace = {
-        library = {
-          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-        },
-      },
-    },
-  },
-}
+-- require'lspconfig'.sumneko_lua.setup {
+--   on_attach = on_attach,
+--   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+--   settings = {
+--     Lua = {
+--       runtime = {
+--         version = 'LuaJIT',
+--         path = vim.split(package.path, ';'),
+--       },
+--       diagnostics = {
+--         globals = {'vim'},
+--       },
+--       workspace = {
+--         library = {
+--           [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+--           [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+--         },
+--       },
+--     },
+--   },
+-- }
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "cpp", "bash", "python", "typescript", "javascript" },

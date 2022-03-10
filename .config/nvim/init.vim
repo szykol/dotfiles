@@ -8,6 +8,7 @@ call plug#begin(stdpath('data') . '/vim-plug')
 Plug 'tpope/vim-commentary'
 Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'), { 'as': 'vsc-easymotion' }) 
 if !exists('g:vscode')
+    Plug 'lewis6991/impatient.nvim'
     Plug 'neovim/nvim-lspconfig'
 
     Plug 'tweekmonster/startuptime.vim'
@@ -45,7 +46,7 @@ if !exists('g:vscode')
     Plug 'f3fora/cmp-spell'
     Plug 'hrsh7th/cmp-cmdline'
 
-
+    Plug 'p00f/clangd_extensions.nvim'
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'mfussenegger/nvim-dap-python'
@@ -59,9 +60,12 @@ if !exists('g:vscode')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ThePrimeagen/refactoring.nvim'
     Plug 'nvim-lua/lsp-status.nvim'
+    Plug 'nathom/filetype.nvim'
 endif
 
 call plug#end()
+
+lua require('impatient')
 
 filetype plugin indent on
 set cc=120
@@ -79,7 +83,7 @@ set nohlsearch
 set completeopt=menu,menuone,noselect
 set clipboard+=unnamedplus
 set noequalalways
-set guifont=JetBrainsMono\ NF:h9
+set guifont=UbuntuMono\ NF:h9
 set pumheight=10
 
 let &stl = " %f %m"
