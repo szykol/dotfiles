@@ -28,7 +28,6 @@ if !exists('g:vscode')
     Plug 'folke/todo-comments.nvim'
 
     Plug 'simrat39/symbols-outline.nvim'
-    Plug 'psf/black'
     Plug 'onsails/lspkind-nvim'
 
     Plug 'kevinhwang91/nvim-bqf'
@@ -60,7 +59,8 @@ if !exists('g:vscode')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ThePrimeagen/refactoring.nvim'
     Plug 'nvim-lua/lsp-status.nvim'
-    Plug 'nathom/filetype.nvim'
+    Plug 'Mofiqul/trld.nvim'
+    Plug 'gfeiyou/command-center.nvim'
 endif
 
 call plug#end()
@@ -85,6 +85,7 @@ set clipboard+=unnamedplus
 set noequalalways
 set guifont=UbuntuMono\ NF:h9
 set pumheight=10
+set laststatus=3
 
 let &stl = " %f %m"
 
@@ -96,6 +97,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
+    luafile ~/.config/nvim/lua/commands.lua
     luafile ~/.config/nvim/lua/heirline_statusline.lua
 endif
 
@@ -136,6 +138,7 @@ nnoremap <silent> <leader>db :lua require'dap'.toggle_breakpoint()<CR>
 nnoremap <silent> <leader>dt :lua require('dapui').toggle()<CR>
 
 nnoremap <leader>p :lua require'telescope'.extensions.project.project{}<CR>
+nnoremap <leader>P :Telescope command_center<CR>
 
 nnoremap <silent> <C-h> :wincmd h<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
@@ -146,7 +149,7 @@ nnoremap <silent> <leader>T :lua require('utils').open_terminal()<CR>
 nnoremap <silent> <leader>t :term<CR>
 nnoremap <silent> <leader>+ :vertical resize +5<CR>
 nnoremap <silent> <leader>- :vertical resize -5<CR>
-nnoremap <leader>P :lua require('utils').perform_upload()<CR>
+nnoremap <leader>U :lua require('utils').perform_upload()<CR>
 
 nnoremap <silent><leader>nt :NvimTreeToggle<CR>
 nnoremap <silent><leader>nr :NvimTreeRefresh<CR>
