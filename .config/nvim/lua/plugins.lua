@@ -268,3 +268,10 @@ require("gitsigns").setup {
 
 require('trld').setup({position = 'top'})
 require("telescope").load_extension('command_center')
+require('colorbuddy').colorscheme('cobalt2')
+require('lualine').setup {
+    options = {
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    }
+}

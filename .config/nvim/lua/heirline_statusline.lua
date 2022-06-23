@@ -99,7 +99,7 @@ local ViMode = {
     -- Same goes for the highlight. Now the foreground will change according to the current mode.
     hl = function(self)
         local mode = self.mode:sub(1, 1) -- get only the first mode character
-        return { fg = self.mode_colors[mode], style = "bold", }
+        return { fg = self.mode_colors[mode], bold = true, }
     end,
 }
 
@@ -107,7 +107,7 @@ local FileType = {
     provider = function()
         return string.upper(vim.bo.filetype)
     end,
-    hl = { fg = utils.get_highlight("Type").fg, style = 'bold' },
+    hl = { fg = utils.get_highlight("Type").fg, bold = true },
 }
 
 
@@ -146,12 +146,12 @@ end
 
 local FileName = {
     provider = get_file_name,
-    hl = { fg = utils.get_highlight("Directory").fg, style="italic,bold" },
+    hl = { fg = utils.get_highlight("Directory").fg, italic = true, bold = true },
 }
 
 local FileNameInactive = {
     provider = get_file_name,
-    hl = { fg = "#AAAAAA", style = "bold" },
+    hl = { fg = "#AAAAAA", bold = true },
 }
 
 local FileFlags = {
@@ -174,7 +174,7 @@ local FileNameModifer = {
     hl = function()
         if vim.bo.modified then
             -- use `force` because we need to override the child's hl foreground
-            return { fg = colors.cyan, style = 'bold', force=true }
+            return { fg = colors.cyan, bold = true, force=true }
         end
     end,
 }
@@ -213,28 +213,28 @@ local Git = {
         provider = function(self)
             return " " .. self.status_dict.head
         end,
-        hl = {style = 'bold'}
+        hl = {bold = true}
     },
     {
         provider = function(self)
             local count = self.status_dict.added or 0
             return count > 0 and (" +" .. count)
         end,
-        hl = { fg = colors.git.add, style="bold"},
+        hl = { fg = colors.git.add, bold = True},
     },
     {
         provider = function(self)
             local count = self.status_dict.removed or 0
             return count > 0 and (" -" .. count)
         end,
-        hl = { fg = colors.git.del, style="bold" },
+        hl = { fg = colors.git.del, bold = True },
     },
     {
         provider = function(self)
             local count = self.status_dict.changed or 0
             return count > 0 and (" ~" .. count)
         end,
-        hl = { fg = colors.git.change, style="bold" },
+        hl = { fg = colors.git.change, bold=true },
     },
 }
 
@@ -252,7 +252,7 @@ local LSPActive = {
         end
         return " [" .. table.concat(names, " ") .. "]"
     end,
-    hl = { fg = colors.green, style = "bold" },
+    hl = { fg = colors.green, bold = true },
 }
 
 local Diagnostics = {
@@ -362,7 +362,7 @@ local TerminalName = {
         local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
         return " " .. tname
     end,
-    hl = { fg = colors.blue, style = "bold" },
+    hl = { fg = colors.blue, bold = true },
 }
 
 local SpecialStatusline = {

@@ -18,7 +18,8 @@ if !exists('g:vscode')
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'szw/vim-maximizer'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'rebelot/heirline.nvim'
+    " Plug 'rebelot/heirline.nvim'
+    Plug 'nvim-lualine/lualine.nvim'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -49,8 +50,8 @@ if !exists('g:vscode')
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'mfussenegger/nvim-dap-python'
-    Plug 'vim-test/vim-test'
-    Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
+    Plug 'antoinemadec/FixCursorHold.nvim'
+    Plug 'nvim-neotest/neotest'
 
     Plug 'mhinz/vim-startify'
     Plug 'rafcamlet/tabline-framework.nvim'
@@ -61,6 +62,9 @@ if !exists('g:vscode')
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'Mofiqul/trld.nvim'
     Plug 'gfeiyou/command-center.nvim'
+
+    Plug 'tjdevries/colorbuddy.nvim'
+    Plug 'lalitmee/cobalt2.nvim'
 endif
 
 call plug#end()
@@ -98,7 +102,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 if !exists('g:vscode')
     luafile ~/.config/nvim/lua/plugins.lua
     luafile ~/.config/nvim/lua/commands.lua
-    luafile ~/.config/nvim/lua/heirline_statusline.lua
+    " luafile ~/.config/nvim/lua/heirline_statusline.lua
 endif
 
 set lcs=trail:.,tab:>-
