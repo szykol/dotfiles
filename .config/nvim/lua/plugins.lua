@@ -1,5 +1,8 @@
 -- Setup nvim-cmp.
 local cmp = require'cmp'
+local types = require('cmp.types')
+local mapping = require('cmp.config.mapping')
+
 local lspkind = require('lspkind')
 
 cmp.setup({
@@ -13,6 +16,14 @@ cmp.setup({
       ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
       ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
       ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+      ['<C-n>'] = {
+        i = mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Insert }),
+        c = mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Insert }),
+      },
+      ['<C-p>'] = {
+        i = mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert }),
+        c = mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert }),
+      },
       ['<C-e>'] = cmp.mapping({
         i = cmp.mapping.abort(),
         c = cmp.mapping.close(),
@@ -32,7 +43,6 @@ cmp.setup({
       format = lspkind.cmp_format({with_text = true, maxwidth = 50})
     },
     experimental = {
-      native_menu = false,
       ghost_text = true
     },
     cmp.setup.cmdline('/', {

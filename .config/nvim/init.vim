@@ -53,7 +53,7 @@ if !exists('g:vscode')
     Plug 'antoinemadec/FixCursorHold.nvim'
     Plug 'nvim-neotest/neotest'
 
-    Plug 'mhinz/vim-startify'
+    " Plug 'mhinz/vim-startify'
     Plug 'rafcamlet/tabline-framework.nvim'
     Plug 'jubnzv/virtual-types.nvim'
     Plug 'tami5/lspsaga.nvim'
@@ -65,6 +65,7 @@ if !exists('g:vscode')
 
     Plug 'tjdevries/colorbuddy.nvim'
     Plug 'lalitmee/cobalt2.nvim'
+    Plug 'rmagatti/auto-session'
 endif
 
 call plug#end()
