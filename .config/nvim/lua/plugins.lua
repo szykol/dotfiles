@@ -95,7 +95,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver' }
+local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver', 'gopls' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -285,3 +285,4 @@ require('lualine').setup {
     section_separators = { left = '', right = ''},
     }
 }
+require('go').setup()

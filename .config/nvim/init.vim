@@ -66,6 +66,7 @@ if !exists('g:vscode')
     Plug 'tjdevries/colorbuddy.nvim'
     Plug 'lalitmee/cobalt2.nvim'
     Plug 'rmagatti/auto-session'
+    Plug 'ray-x/go.nvim'
 endif
 
 call plug#end()
@@ -75,7 +76,7 @@ lua require('impatient')
 filetype plugin indent on
 set cc=120
 set ts=4 sw=4 sts=4 et list
-set lcs=trail:.,tab:>-
+set lcs=tab:»\ ,trail:.
 set hid nowrap spr sb ic scs nu rnu tgc nosmd swb=useopen scl=yes nosc noru icm=split
 set udir=$HOME/.local/share/nvim/undodir udf
 set cot=menuone,noinsert,noselect shm+=c
@@ -105,8 +106,6 @@ if !exists('g:vscode')
     luafile ~/.config/nvim/lua/commands.lua
     " luafile ~/.config/nvim/lua/heirline_statusline.lua
 endif
-
-set lcs=trail:.,tab:>-
 
 let mapleader = " "
 nn <silent> <leader>n :noh<CR>
@@ -190,6 +189,7 @@ endfun
 augroup SZYKOL
     autocmd!
     autocmd BufWritePost *.tex :TexlabBuild
+    autocmd BufWritePost *.go :GoFmt
     " autocmd BufWritePost *.py :silent Black
     autocmd BufWritePost * :lua require('utils').perform_upload()
     " autocmd BufWritePre * :call TrimWhitespace()
@@ -197,6 +197,7 @@ augroup SZYKOL
     autocmd FileType python nmap <buffer> <silent> <leader>dn :lua require'dap-python'.test_method()<CR>
     autocmd FileType python nmap <buffer> <silent> <leader>dc :lua require'dap-python'.test_class()<CR>
     autocmd FileType python nmap <silent> <leader>ds <ESC>:lua require('dap-python').debug_selection()<CR>
+    autocmd FileType go setlocal noet ci pi sts=0 sw=4 ts=4
 augroup END
 
 highlight DiagnosticError ctermfg=204 guifg=#E06C75
