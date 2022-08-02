@@ -1,11 +1,13 @@
+vim.api.nvim_create_augroup("SZYKOL", { clear = true })
+
 vim.api.nvim_create_autocmd("BufWritePost", {
-  group = vim.api.nvim_create_augroup("SZYKOL", { clear = true }),
+  group = group,
   pattern = "*.tex",
   command = "TexlabBuild"
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = vim.api.nvim_create_augroup("SZYKOL", { clear = true }),
+  group = group,
   pattern = "*",
   callback = function() vim.highlight.on_yank({on_visual = true}) end
 })
@@ -17,19 +19,19 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- }
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-  group = vim.api.nvim_create_augroup("SZYKOL", { clear = true }),
+  group = group,
   pattern = "*",
   callback = function() require"utils".perform_upload() end
 })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-  group = vim.api.nvim_create_augroup("SZYKOL", { clear = true }),
+  group = group,
   pattern = "*go",
   command = "GoFmt"
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("SZYKOL", { clear = true }),
+  group = group,
   pattern = "*go",
   callback = function()
     vim.cmd("setlocal")
@@ -39,5 +41,14 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt.softtabstop = 0
     vim.opt.shiftwidth = 4
     vim.opt.tabstop = 4
+  end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = group,
+  pattern = "*lua",
+  callback = function()
+    vim.opt.softtabstop = 2
+    vim.opt.shiftwidth = 2
   end
 })

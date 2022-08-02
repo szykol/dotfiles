@@ -1,8 +1,6 @@
--- Setup nvim-cmp.
 local cmp = require'cmp'
 local types = require('cmp.types')
 local mapping = require('cmp.config.mapping')
-
 local lspkind = require('lspkind')
 
 cmp.setup({
@@ -60,12 +58,13 @@ cmp.setup({
 })
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
 local nvim_lsp = require("lspconfig")
+local virtual_types = require("virtualtypes")
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  virtual_types.on_attach(client, buffer)
 
   if client.supports_method('textDocument/codeLens') then
     require'virtualtypes'.on_attach(client, bufnr)
@@ -108,11 +107,11 @@ end
 
 require("clangd_extensions").setup {
   server = {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      flags = {
-        debounce_text_changes = 150,
-      }
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = {
+      debounce_text_changes = 150,
+    }
   },
   extensions = {
     -- defaults:
@@ -198,91 +197,26 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 --   },
 -- }
 
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "cpp", "bash", "python", "typescript", "javascript" },
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    -- disable = { "c", "rust" },  -- list of language that will be disabled
-  },
-}
 
-local telescope = require"telescope"
-telescope.setup{}
--- telescope.load_extension('project')
-telescope.load_extension('refactoring')
-
--- require("trouble").setup{}
-
-vim.g.symbols_outline = {
-  highlight_hovered_item = true,
-  show_guides = true,
-  position = 'right',
-  keymaps = {
-    close = "<Esc>",
-    goto_location = "<Cr>",
-    focus_location = "o",
-    hover_symbol = "<C-space>",
-    rename_symbol = "r",
-    code_actions = "a",
-  },
-  lsp_blacklist = {},
-}
-
--- require("todo-comments").setup {}
+-- vim.g.symbols_outline = {
+--   highlight_hovered_item = true,
+--   show_guides = true,
+--   position = 'right',
+--   keymaps = {
+--     close = "<Esc>",
+--     goto_location = "<Cr>",
+--     focus_location = "o",
+--     hover_symbol = "<C-space>",
+--     rename_symbol = "r",
+--     code_actions = "a",
+--   },
+--   lsp_blacklist = {},
+-- }
 
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
-require"nvim-tree".setup {}
-
-local dap_python = require('dap-python')
-dap_python.setup('~/.virtualenvs/debugpy/bin/python')
-dap_python.test_runner = "pytest"
-
-require("dapui").setup()
-
-require('tabline_framework').setup {
-  render = function(f)
-    f.add '   '
-
-    f.make_tabs(function(info)
-      f.add(' ' .. info.index .. ' ')
-      f.add(info.filename or '[no name]')
-      f.add(info.modified and '+')
-      f.add ' '
-    end)
-  end,
-}
-
-local null_ls = require("null-ls")
-
--- register any number of sources simultaneously
-local sources = {
-    null_ls.builtins.formatting.black,
-    null_ls.builtins.formatting.clang_format,
-    null_ls.builtins.diagnostics.flake8,
-    -- null_ls.builtins.diagnostics.gccdiag,
-    -- null_ls.builtins.diagnostics.write_good,
-    -- null_ls.builtins.code_actions.gitsigns,
-}
-
-null_ls.setup({ sources = sources })
-
-require("gitsigns").setup {
-    current_line_blame = true
-}
-
-require('trld').setup({position = 'top'})
-require("telescope").load_extension('command_center')
 require('colorbuddy').colorscheme('cobalt2')
-require('lualine').setup {
-    options = {
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    }
-}
-require('go').setup()

@@ -5,20 +5,60 @@ return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use 'neovim/nvim-lspconfig'
   use 'tweekmonster/startuptime.vim'
-  use 'lewis6991/gitsigns.nvim'
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require"gitsigns".setup({
+        current_line_blame = true
+      })
+    end
+  }
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
+    run = ':TSUpdate',
+    config = function()
+      require'nvim-treesitter.configs'.setup {
+        ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go" },
+        highlight = {
+          enable = true,
+        },
+      }
+    end
   }
   use 'szw/vim-maximizer'
   use 'kyazdani42/nvim-web-devicons'
-  use 'nvim-lualine/lualine.nvim'
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+    config = function()
+      require"lualine".setup {
+        options = {
+          component_separators = { left = '', right = ''},
+          section_separators = { left = '', right = ''},
+        }
+      }
+    end
+  }
   use 'nvim-lua/plenary.nvim'
-  use 'nvim-telescope/telescope.nvim'
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.0',
+    requires = { {'nvim-lua/plenary.nvim'} },
+    config = function()
+      require"telescope".setup{}
+    end
+  }
   use 'onsails/lspkind-nvim'
   use 'ray-x/lsp_signature.nvim'
-  use 'kyazdani42/nvim-tree.lua'
-
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = {
+      'kyazdani42/nvim-web-devicons',
+    },
+    tag = 'nightly',
+    config = function()
+      require"nvim-tree".setup {}
+    end
+  }
   use 'L3MON4D3/LuaSnip'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
@@ -31,23 +71,93 @@ return require('packer').startup(function(use)
 
   use 'p00f/clangd_extensions.nvim'
   use 'mfussenegger/nvim-dap'
-  use 'rcarriga/nvim-dap-ui'
-  use 'mfussenegger/nvim-dap-python'
-  use 'antoinemadec/FixCursorHold.nvim'
-  use 'nvim-neotest/neotest'
-
-  use 'rafcamlet/tabline-framework.nvim'
+  use {
+    'rcarriga/nvim-dap-ui',
+    config = function()
+      require"dapui".setup()
+    end
+  }
+  use {
+    'mfussenegger/nvim-dap-python',
+    config = function()
+      local dap_python = require"dap-python"
+      dap_python.setup('~/.virtualenvs/debugpy/bin/python')
+      dap_python.test_runner = "pytest"
+    end
+  }
+  use {
+    'leoluz/nvim-dap-go',
+    config = function()
+      require"dap-go".setup()
+    end
+  }
+  use({
+    'nvim-neotest/neotest',
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-neotest/neotest-go",
+      "nvim-neotest/neotest-python",
+    },
+    config = function()
+      require('neotest').setup({
+        adapters = {
+          require('neotest-go'),
+          require('neotest-python')({
+            runner = "pytest"
+          })
+        }
+      })
+    end
+  })
   use 'jubnzv/virtual-types.nvim'
   use 'tami5/lspsaga.nvim'
   use 'jose-elias-alvarez/null-ls.nvim'
-  use 'ThePrimeagen/refactoring.nvim'
-  use 'nvim-lua/lsp-status.nvim'
-  use 'Mofiqul/trld.nvim'
-  use 'gfeiyou/command-center.nvim'
-
-  use 'tjdevries/colorbuddy.nvim'
-  use 'lalitmee/cobalt2.nvim'
-  use 'rmagatti/auto-session'
-  use 'ray-x/go.nvim'
-
+  use {
+    "ThePrimeagen/refactoring.nvim",
+    requires = {
+        {"nvim-lua/plenary.nvim"},
+        {"nvim-treesitter/nvim-treesitter"}
+    },
+    config = function()
+      require"telescope".load_extension("refactoring")
+    end
+  }
+  use {
+    'Mofiqul/trld.nvim',
+    config = function()
+      require"trld".setup {position = "top"}
+    end
+  }
+  use {
+    "FeiyouG/command_center.nvim",
+    requires = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require"telescope".load_extension("command_center")
+    end
+  }
+  use { 'lalitmee/cobalt2.nvim', requires = 'tjdevries/colorbuddy.nvim' }
+  use {
+    'rmagatti/auto-session',
+    config = function()
+      require"auto-session".setup {
+        log_level = 'info',
+        auto_session_suppress_dirs = {'~/', '~/Projects'}
+      }
+    end
+  }
+  use {
+    'ray-x/go.nvim',
+    config = function()
+      require('go').setup()
+    end
+  }
+  use 'lewis6991/impatient.nvim'
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require"Comment".setup()
+    end
+  }
 end)
