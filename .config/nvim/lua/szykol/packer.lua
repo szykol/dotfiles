@@ -21,12 +21,12 @@ return require('packer').startup(function(use)
         ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go" },
         highlight = {
           enable = true,
+          additional_vim_regex_highlighting = false,
         },
       }
     end
   }
   use 'szw/vim-maximizer'
-  use 'kyazdani42/nvim-web-devicons'
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true },
@@ -39,7 +39,6 @@ return require('packer').startup(function(use)
       }
     end
   }
-  use 'nvim-lua/plenary.nvim'
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
     requires = { {'nvim-lua/plenary.nvim'} },
@@ -137,7 +136,10 @@ return require('packer').startup(function(use)
       require"telescope".load_extension("command_center")
     end
   }
-  use { 'lalitmee/cobalt2.nvim', requires = 'tjdevries/colorbuddy.nvim' }
+  -- use { 'lalitmee/cobalt2.nvim', requires = 'tjdevries/colorbuddy.nvim' }
+  use {
+    "catppuccin/nvim", as = "catppuccin",
+  }
   use {
     'rmagatti/auto-session',
     config = function()
