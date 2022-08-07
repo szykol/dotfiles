@@ -92,7 +92,8 @@ local function build_scp_cmd(config)
   local target_host = config.host
   local target_path = config.target_path .. relative_file
   local user = config.user
-  local args = {tostring(absolute_filepath), user .. "@" .. target_host .. ':' .. target_path}
+  local port = config.port
+  local args = {"-P", port, tostring(absolute_filepath), user .. "@" .. target_host .. ':' .. target_path}
 
   return {
     command = "scp",
