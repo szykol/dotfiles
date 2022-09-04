@@ -35,6 +35,38 @@ return require('packer').startup(function(use)
         options = {
           component_separators = { left = '', right = ''},
           section_separators = { left = '', right = ''},
+        },
+        sections = {
+          lualine_a = {'mode'},
+          lualine_b = {'branch', 'diff', 'diagnostics'},
+          lualine_c = { function() return vim.fn.expand("%F") end },
+          lualine_x = {'encoding', 'fileformat', 'filetype'},
+          lualine_y = {'progress'},
+          lualine_z = {'location'}
+        },
+        winbar = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {
+            function()
+              return vim.fn.expand("%F")
+            end
+          },
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {}
+        },
+        inactive_winbar = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {
+            function()
+              return vim.fn.expand("%F")
+            end
+          },
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {}
         }
       }
     end
@@ -67,6 +99,7 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-calc'
   use 'f3fora/cmp-spell'
   use 'hrsh7th/cmp-cmdline'
+  use 'hrsh7th/cmp-nvim-lsp-signature-help'
 
   use 'p00f/clangd_extensions.nvim'
   use 'mfussenegger/nvim-dap'
@@ -111,7 +144,6 @@ return require('packer').startup(function(use)
     end
   })
   use 'jubnzv/virtual-types.nvim'
-  use 'tami5/lspsaga.nvim'
   use 'jose-elias-alvarez/null-ls.nvim'
   use {
     "ThePrimeagen/refactoring.nvim",
@@ -123,12 +155,7 @@ return require('packer').startup(function(use)
       require"telescope".load_extension("refactoring")
     end
   }
-  use {
-    'Mofiqul/trld.nvim',
-    config = function()
-      require"trld".setup {position = "top"}
-    end
-  }
+  use 'Mofiqul/trld.nvim'
   use {
     "FeiyouG/command_center.nvim",
     requires = { "nvim-telescope/telescope.nvim" },
@@ -162,4 +189,21 @@ return require('packer').startup(function(use)
       require"Comment".setup()
     end
   }
+  use {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require'treesitter-context'.setup{}
+    end
+  }
+  use 'm-demare/hlargs.nvim'
+  use{
+    "glepnir/lspsaga.nvim",
+    branch = "main",
+    config = function()
+      local saga = require("lspsaga")
+      saga.init_lsp_saga{}
+    end,
+  }
+
+  use "rafamadriz/friendly-snippets"
 end)

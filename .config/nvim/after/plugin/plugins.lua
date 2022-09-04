@@ -1,7 +1,40 @@
+local ls = require"luasnip"
+local snip_types = require"luasnip.util.types"
 local cmp = require'cmp'
 local types = require('cmp.types')
 local mapping = require('cmp.config.mapping')
 local lspkind = require('lspkind')
+
+ls.config.set_config {
+  history = true,
+  updateevents = "TextChanged,TextChangedI",
+  enable_autosnippets = true,
+  ext_opts = {
+    [snip_types.choiceNode] = {
+      active = {
+        virt_text = { { "<-", "Error" } },
+      },
+    },
+  },
+}
+
+vim.keymap.set({ "i", "s" }, "<c-j>", function()
+  if ls.expand_or_jumpable() then
+    ls.expand_or_jump()
+  end
+end, { silent = true })
+
+vim.keymap.set({ "i", "s" }, "<c-k>", function()
+  if ls.jumpable(-1) then
+    ls.jump(-1)
+  end
+end, { silent = true })
+
+vim.keymap.set("i", "<c-l>", function()
+  if ls.choice_active() then
+    ls.change_choice(1)
+  end
+end, { silent = true })
 
 cmp.setup({
     snippet = {
@@ -28,15 +61,15 @@ cmp.setup({
       }),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     },
-    sources = cmp.config.sources({
+    sources = {
+      { name = 'nvim_lsp_signature_help' },
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
-    }, {
       { name = 'buffer' },
       { name = 'path' },
       { name = 'calc' },
       { name = 'spell' },
-    }),
+    },
     formatting = {
       format = lspkind.cmp_format({with_text = true, maxwidth = 50})
     },
@@ -76,20 +109,20 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>lua require("lspsaga.hover").render_hover_doc()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
+  -- buf_set_keymap('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>lua require("lspsaga.rename").rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>ca', '<cmd>lua require("lspsaga.codeaction").code_action()', opts)
+  buf_set_keymap('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
+  buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<leader>sd', '<cmd>lua require"lspsaga.diagnostic".show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '<leader>sc', '<cmd>lua require"lspsaga.diagnostic".show_cursor_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '<leader>sk', '<cmd>lua require"lspsaga.diagnostic".navigate "prev"()<CR>', opts)
-  buf_set_keymap('n', '<leader>sj', '<cmd>lua require"lspsaga.diagnostic".navigate "next"()<CR>', opts)
+  buf_set_keymap('n', '<leader>sd', '<cmd>Lspsaga show_line_diagnostics<CR>', opts)
+  buf_set_keymap('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
+  buf_set_keymap('n', '<leader>sk', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  buf_set_keymap('n', '<leader>sj', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
@@ -152,13 +185,13 @@ require("clangd_extensions").setup {
   }
 }
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = false,
-    signs = true,
-    update_in_insert = false,
-  }
-)
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+})
 
 -- local system_name
 -- if vim.fn.has("mac") == 1 then
@@ -216,7 +249,5 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
-
--- require('colorbuddy').colorscheme('cobalt2')

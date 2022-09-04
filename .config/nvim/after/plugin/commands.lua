@@ -12,6 +12,10 @@ command_center.add({
     cmd = "<CMD>so ~/.config/nvim/init.lua<CR>",
   },
   {
+    description = "Reload snippets",
+    cmd = "<CMD>so ~/.config/nvim/after/luasnips.lua<CR>",
+  },
+  {
     description = "Search inside current buffer",
     cmd = "<CMD>Telescope current_buffer_fuzzy_find<CR>",
   }, {

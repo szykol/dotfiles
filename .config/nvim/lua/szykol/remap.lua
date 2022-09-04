@@ -49,3 +49,6 @@ nnoremap("<leader>nt", ":NvimTreeToggle<CR>")
 nnoremap("<leader>nr", ":NvimTreeRefresh<CR>")
 nnoremap("<leader>nf", ":NvimTreeFindFile<CR>")
 vnoremap("<leader>rr", ":<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>")
+
+nnoremap("<leader>gj", ":Gitsigns next_hunk<CR>")
+nnoremap("<leader>gk", ":Gitsigns prev_hunk<CR>")

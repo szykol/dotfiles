@@ -16,3 +16,7 @@ require("catppuccin").setup {
   },
 }
 vim.cmd [[colorscheme catppuccin]]
+
+-- highlight function arguments, call after setting colorscheme to make sure nothing is overriden
+require"hlargs".setup()
+-- require"trld".setup{position = "top"}
