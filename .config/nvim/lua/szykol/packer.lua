@@ -39,7 +39,7 @@ return require('packer').startup(function(use)
         sections = {
           lualine_a = {'mode'},
           lualine_b = {'branch', 'diff', 'diagnostics'},
-          lualine_c = { function() return vim.fn.expand("%F") end },
+          lualine_c = { function() return vim.fn.expand("%F") end},
           lualine_x = {'encoding', 'fileformat', 'filetype'},
           lualine_y = {'progress'},
           lualine_z = {'location'}
@@ -196,7 +196,7 @@ return require('packer').startup(function(use)
     end
   }
   use 'm-demare/hlargs.nvim'
-  use{
+  use {
     "glepnir/lspsaga.nvim",
     branch = "main",
     config = function()
@@ -206,4 +206,21 @@ return require('packer').startup(function(use)
   }
 
   use "rafamadriz/friendly-snippets"
+  use {
+    "doums/suit.nvim",
+    config = function()
+      require"suit".setup{}
+    end
+  }
+  -- use "sam4llis/nvim-tundra"
+  use {
+    "ThePrimeagen/git-worktree.nvim",
+    requires = {
+        {"nvim-lua/plenary.nvim"},
+        {"nvim-telescope/telescope.nvim"}
+    },
+    config = function()
+      require"telescope".load_extension("git_worktree")
+    end
+  }
 end)

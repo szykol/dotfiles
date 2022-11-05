@@ -8,6 +8,10 @@ command_center.add({
     cmd = "<CMD>e ~/.config/nvim/init.lua<CR>",
   },
   {
+    description = "Telescope neovim config",
+    cmd = "<CMD>Telescope find_files cwd=$HOME/.config/nvim theme=ivy<CR>",
+  },
+  {
     description = "Reload config file",
     cmd = "<CMD>so ~/.config/nvim/init.lua<CR>",
   },
