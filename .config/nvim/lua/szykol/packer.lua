@@ -163,7 +163,7 @@ return require('packer').startup(function(use)
       require"telescope".load_extension("command_center")
     end
   }
-  -- use { 'lalitmee/cobalt2.nvim', requires = 'tjdevries/colorbuddy.nvim' }
+  use { 'lalitmee/cobalt2.nvim', requires = 'tjdevries/colorbuddy.nvim' }
   use {
     "catppuccin/nvim", as = "catppuccin",
   }
