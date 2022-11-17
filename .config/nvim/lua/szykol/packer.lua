@@ -223,4 +223,5 @@ return require('packer').startup(function(use)
       require"telescope".load_extension("git_worktree")
     end
   }
+  use 'tpope/vim-fugitive'
 end)
