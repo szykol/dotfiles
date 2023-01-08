@@ -2,6 +2,15 @@ return {
   "folke/which-key.nvim",
 
   {
+    'lalitmee/cobalt2.nvim',
+    dependencies = { 'tjdevries/colorbuddy.nvim' },
+    config = function ()
+      require"colorbuddy".colorscheme('cobalt2')
+      require"hlargs".setup()
+    end
+  },
+
+  {
     "dstein64/vim-startuptime",
     cmd = "StartupTime",
     lazy = true,
@@ -157,13 +166,8 @@ return {
   -- },
 
   'jubnzv/virtual-types.nvim',
-  'jose-elias-alvarez/null-ls.nvim',
   'Mofiqul/trld.nvim',
 
-  {
-    'lalitmee/cobalt2.nvim',
-    dependencies = { 'tjdevries/colorbuddy.nvim' },
-  },
 
   -- {
   --   'rmagatti/auto-session',
@@ -214,4 +218,25 @@ return {
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
   'neovim/nvim-lspconfig',
+
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    config = function()
+      local nls = require("null-ls")
+      nls.setup({
+        debounce = 150,
+        save_after_format = false,
+        sources = {
+          nls.builtins.formatting.stylua,
+          nls.builtins.diagnostics.markdownlint,
+          nls.builtins.formatting.isort,
+          nls.builtins.formatting.black,
+          nls.builtins.diagnostics.flake8,
+          nls.builtins.formatting.gofumpt,
+          nls.builtins.diagnostics.golangci_lint,
+        },
+        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git", "go.sum"),
+      })
+    end,
+  },
 }

@@ -60,6 +60,6 @@
 -- vim.opt.background = 'dark'
 -- vim.cmd('colorscheme tundra')
 -- highlight function arguments, call after setting colorscheme to make sure nothing is overriden
-require"colorbuddy".colorscheme('cobalt2')
-require"hlargs".setup()
+-- require"colorbuddy".colorscheme('cobalt2')
+-- require"hlargs".setup()
 -- require"trld".setup{position = "top"}
