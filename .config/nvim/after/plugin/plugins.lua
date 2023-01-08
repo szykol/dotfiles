@@ -5,6 +5,11 @@ local types = require('cmp.types')
 local mapping = require('cmp.config.mapping')
 local lspkind = require('lspkind')
 
+require("mason").setup()
+require("mason-lspconfig").setup {
+  ensure_installed = { "sumneko_lua", "rust_analyzer", "pyright", "gopls" },
+}
+
 ls.config.set_config {
   history = true,
   updateevents = "TextChanged,TextChangedI",
@@ -92,12 +97,9 @@ cmp.setup({
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local nvim_lsp = require("lspconfig")
-local virtual_types = require("virtualtypes")
 
 local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  virtual_types.on_attach(client, buffer)
 
   if client.supports_method('textDocument/codeLens') then
     require'virtualtypes'.on_attach(client, bufnr)
@@ -106,25 +108,25 @@ local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  local opts = { noremap=true, silent=true }
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  -- buf_set_keymap('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
-  buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
-  buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<leader>sd', '<cmd>Lspsaga show_line_diagnostics<CR>', opts)
-  buf_set_keymap('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
-  buf_set_keymap('n', '<leader>sk', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
-  buf_set_keymap('n', '<leader>sj', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-  buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  local opts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
+  vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  -- vim.keymap.set('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
+  vim.keymap.set('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  vim.keymap.set('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  vim.keymap.set('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  vim.keymap.set('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
+  vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
+  vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  vim.keymap.set('n', '<leader>sd', '<cmd>Lspsaga show_line_diagnostics<CR>', opts)
+  vim.keymap.set('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
+  vim.keymap.set('n', '<leader>sk', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  vim.keymap.set('n', '<leader>sj', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+  vim.keymap.set('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
 local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver', 'gopls' }
@@ -193,42 +195,26 @@ vim.diagnostic.config({
   severity_sort = false,
 })
 
--- local system_name
--- if vim.fn.has("mac") == 1 then
---   system_name = "macOS"
--- elseif vim.fn.has("unix") == 1 then
---   system_name = "Linux"
--- elseif vim.fn.has('win32') == 1 then
---   system_name = "Windows"
--- else
---   print("Unsupported system for sumneko")
--- end
-
--- local home = vim.fn.expand('$HOME')
--- local sumneko_root_path = home .. '/dev/lua-language-server'
--- local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
-
--- require'lspconfig'.sumneko_lua.setup {
---   on_attach = on_attach,
---   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
---   settings = {
---     Lua = {
---       runtime = {
---         version = 'LuaJIT',
---         path = vim.split(package.path, ';'),
---       },
---       diagnostics = {
---         globals = {'vim'},
---       },
---       workspace = {
---         library = {
---           [vim.fn.expand('$VIMRUNTIME/lua')] = true,
---           [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
---         },
---       },
---     },
---   },
--- }
+require'lspconfig'.sumneko_lua.setup {
+  on_attach = on_attach,
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'LuaJIT',
+        path = vim.split(package.path, ';'),
+      },
+      diagnostics = {
+        globals = {'vim'},
+      },
+      workspace = {
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+        },
+      },
+    },
+  },
+}
 
 
 -- vim.g.symbols_outline = {
@@ -251,3 +237,27 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+
+-- local rt = require("rust-tools")
+-- rt.setup()
+--
+local dap = require('dap')
+dap.adapters.lldb = {
+  type = 'executable',
+  command = '/usr/bin/lldb-vscode', -- adjust as needed, must be absolute path
+  name = 'lldb'
+}
+dap.configurations.rust = {
+  {
+    name = "Launch",
+    type = "lldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+    runInTerminal = false,
+  },
+}

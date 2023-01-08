@@ -34,7 +34,6 @@ vim.api.nvim_create_autocmd("FileType", {
   group = group,
   pattern = "*go",
   callback = function()
-    vim.cmd("setlocal")
     vim.opt.expandtab = false
     vim.opt.copyindent = true
     vim.opt.preserveindent = true

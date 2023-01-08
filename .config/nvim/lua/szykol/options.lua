@@ -41,3 +41,4 @@ opt.equalalways = false
 opt.guifont = "UbuntuMono NF:h9"
 opt.pumheight = 10
 opt.laststatus = 3
+opt.wrap = true
