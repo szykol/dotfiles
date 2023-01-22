@@ -1,3 +1,4 @@
+local statuscolumn = require "szykol.statuscolumn"
 local opt = vim.opt
 local home = vim.fn.expand('$HOME')
 
@@ -42,3 +43,5 @@ opt.guifont = "UbuntuMono NF:h9"
 opt.pumheight = 10
 opt.laststatus = 3
 opt.wrap = true
+
+statuscolumn.set_global_statuscolumn()
