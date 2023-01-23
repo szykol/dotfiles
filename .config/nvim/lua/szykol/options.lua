@@ -2,7 +2,7 @@ local statuscolumn = require "szykol.statuscolumn"
 local opt = vim.opt
 local home = vim.fn.expand('$HOME')
 
-opt.colorcolumn = "120"
+opt.colorcolumn = ""
 opt.tabstop = 4
 opt.shiftwidth = 4
 opt.softtabstop = 4

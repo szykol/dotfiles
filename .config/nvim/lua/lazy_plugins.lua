@@ -1,14 +1,42 @@
 return {
   "folke/which-key.nvim",
 
+  -- {
+  --   'lalitmee/cobalt2.nvim',
+  --   dependencies = { 'tjdevries/colorbuddy.nvim' },
+  --   priority = 1000,
+  --   config = function ()
+  --     require"colorbuddy".colorscheme('cobalt2')
+  --     require"hlargs".setup()
+  --   end
+  -- },
+
+  -- {
+  --   'Yagua/nebulous.nvim',
+  --   dependencies = { 'tjdevries/colorbuddy.nvim' },
+  --   priority = 1000,
+  --   config = function ()
+  --     require"colorbuddy".colorscheme('nebulous')
+  --     require("nebulous.functions").set_variant("twilight")
+  --     require"hlargs".setup()
+  --   end
+  -- },
+
   {
-    'lalitmee/cobalt2.nvim',
-    dependencies = { 'tjdevries/colorbuddy.nvim' },
+    "catppuccin/nvim",
+    priority = 1000,
     config = function ()
-      require"colorbuddy".colorscheme('cobalt2')
-      require"hlargs".setup()
+      vim.cmd.colorscheme "catppuccin"
     end
   },
+
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     vim.cmd.colorscheme "tokyonight"
+  --   end
+  -- },
 
   {
     "dstein64/vim-startuptime",
@@ -239,4 +267,5 @@ return {
       })
     end,
   },
+
 }

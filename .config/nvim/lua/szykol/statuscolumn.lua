@@ -3,7 +3,7 @@
 
 local M = {}
 
-local git_gutter_sign = "┃"
+local git_gutter_sign = "│"
 local default_highlight = "%#LineNr#"
 local inactive_git_highlight = "%#NonText#"
 local gitsigns_untracked = "GitSignsUntracked"
@@ -16,7 +16,9 @@ M.diagnostic_sign_from_hl = {
 }
 
 M.get_signs_for_current_line = function ()
-  local bufnr = vim.api.nvim_get_current_buf()
+  -- Need to get bufnr for the line that the statuscolumn is being drawn for
+  -- instead of bufnr of current cursor line
+  local bufnr = vim.fn.winbufnr(vim.g.statusline_winid)
   local lnum = vim.v.lnum
   local signs = vim.fn.sign_getplaced(bufnr, {group="*", lnum=lnum})
   signs = signs[1]
