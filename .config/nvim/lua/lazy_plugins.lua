@@ -22,11 +22,19 @@ return {
   --   end
   -- },
 
+  -- {
+  --   "catppuccin/nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     vim.cmd.colorscheme "catppuccin"
+  --   end
+  -- },
+
   {
-    "catppuccin/nvim",
+    "Shatur/neovim-ayu",
     priority = 1000,
     config = function ()
-      vim.cmd.colorscheme "catppuccin"
+      require('ayu').colorscheme()
     end
   },
 
@@ -82,31 +90,18 @@ return {
           lualine_y = {'progress'},
           lualine_z = {'location'}
         },
-        winbar = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {
-            function()
-              return vim.fn.expand("%F")
-            end
-          },
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = {}
-        },
-        inactive_winbar = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {
-            function()
-              return vim.fn.expand("%F")
-            end
-          },
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = {}
-        }
     }
+  },
+
+  {
+    "romgrk/barbar.nvim",
+    config = function ()
+      require'bufferline'.setup({
+        animation = false,
+        diagnostics = {},
+
+      })
+    end
   },
 
   {
