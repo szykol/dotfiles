@@ -22,21 +22,21 @@ return {
   --   end
   -- },
 
-  -- {
-  --   "catppuccin/nvim",
-  --   priority = 1000,
-  --   config = function ()
-  --     vim.cmd.colorscheme "catppuccin"
-  --   end
-  -- },
-
   {
-    "Shatur/neovim-ayu",
+    "catppuccin/nvim",
     priority = 1000,
     config = function ()
-      require('ayu').colorscheme()
+      vim.cmd.colorscheme "catppuccin"
     end
   },
+
+  -- {
+  --   "Shatur/neovim-ayu",
+  --   priority = 1000,
+  --   config = function ()
+  --     require('ayu').colorscheme()
+  --   end
+  -- },
 
   -- {
   --   "folke/tokyonight.nvim",
@@ -82,6 +82,12 @@ return {
           component_separators = { left = '', right = ''},
           section_separators = { left = '', right = ''},
         },
+        winbar = {
+          lualine_c = { "aerial" },
+        },
+        inactive_winbar = {
+          lualine_c = { "aerial" },
+        },
         sections = {
           lualine_a = {'mode'},
           lualine_b = {'branch', 'diff', 'diagnostics'},
@@ -94,13 +100,10 @@ return {
   },
 
   {
-    "romgrk/barbar.nvim",
+    "stevearc/aerial.nvim",
     config = function ()
-      require'bufferline'.setup({
-        animation = false,
-        diagnostics = {},
-
-      })
+      require "aerial".setup()
+      require "telescope".load_extension('aerial')
     end
   },
 
