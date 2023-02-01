@@ -26,6 +26,22 @@ return {
     "catppuccin/nvim",
     priority = 1000,
     config = function ()
+      require"catppuccin".setup {
+        -- styles = {
+        --   comments = { "italic" },
+        --   conditionals = { "italic" },
+        --   loops = { "italic", "bold" },
+        --   functions = { "bold" },
+        --   keywords = { "italic", "bold" },
+        --   strings = { "italic" },
+        --   variables = {},
+        --   numbers = {},
+        --   booleans = { "italic" },
+        --   properties = { "bold" },
+        --   types = { "bold" },
+        --   operators = { "bold" },
+        -- },
+      }
       vim.cmd.colorscheme "catppuccin"
     end
   },
@@ -63,7 +79,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require'nvim-treesitter.configs'.setup {
-        ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go" },
+        ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go", "markdown" },
         highlight = {
           enable = true,
           additional_vim_regex_highlighting = false,
@@ -83,10 +99,12 @@ return {
           section_separators = { left = '', right = ''},
         },
         winbar = {
-          lualine_c = { "aerial" },
+          lualine_c = { function() return require"lspsaga.symbolwinbar":get_winbar() or "" end },
+          lualine_x = { function() return vim.fn.expand("%F") end },
         },
         inactive_winbar = {
           lualine_c = { "aerial" },
+          lualine_x = { function() return vim.fn.expand("%F") end },
         },
         sections = {
           lualine_a = {'mode'},
@@ -222,10 +240,16 @@ return {
 
   {
     "glepnir/lspsaga.nvim",
+    event = "BufRead",
     config = function()
-      local saga = require("lspsaga")
-      saga.init_lsp_saga{}
+      require("lspsaga").setup({
+        symbol_in_winbar = {
+          enable = false,
+          color_mode = false,
+        }
+      })
     end,
+    dependencies = { {"nvim-tree/nvim-web-devicons"} }
   },
 
   -- {

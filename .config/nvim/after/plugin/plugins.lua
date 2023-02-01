@@ -76,7 +76,18 @@ cmp.setup({
       { name = 'spell' },
     },
     formatting = {
-      format = lspkind.cmp_format({with_text = true, maxwidth = 50})
+      format = lspkind.cmp_format({
+        mode = 'symbol_text',
+        maxwidth = 50,
+        ellipsis_char = '...',
+        menu = ({
+          buffer = "[Buffer]",
+          nvim_lsp = "[LSP]",
+          luasnip = "[LuaSnip]",
+          nvim_lua = "[Lua]",
+          latex_symbols = "[Latex]",
+        })
+      })
     },
     experimental = {
       ghost_text = true
@@ -109,24 +120,24 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   local opts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
-  vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  vim.keymap.set('n', 'gD',         '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  vim.keymap.set('n', 'gd',         '<cmd>Lspsaga goto_definition<CR>', opts)
+  vim.keymap.set('n', 'K',          '<cmd>Lspsaga hover_doc<CR>', opts)
+  vim.keymap.set('n', 'gi',         '<cmd>Telescope lsp_implementations<CR>', opts)
   -- vim.keymap.set('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
   vim.keymap.set('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   vim.keymap.set('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   vim.keymap.set('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  vim.keymap.set('n', '<leader>D',  '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.keymap.set('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
   vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
-  vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  vim.keymap.set('n', 'gr',         '<cmd>Telescope lsp_references<CR>', opts)
   vim.keymap.set('n', '<leader>sd', '<cmd>Lspsaga show_line_diagnostics<CR>', opts)
   vim.keymap.set('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
   vim.keymap.set('n', '<leader>sk', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
   vim.keymap.set('n', '<leader>sj', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-  vim.keymap.set('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  vim.keymap.set('n', '<leader>q',  '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  vim.keymap.set('n', '<leader>r',  '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
 local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver', 'gopls' }
