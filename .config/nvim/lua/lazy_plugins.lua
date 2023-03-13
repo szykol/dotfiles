@@ -22,29 +22,29 @@ return {
   --   end
   -- },
 
-  {
-    "catppuccin/nvim",
-    priority = 1000,
-    config = function ()
-      require"catppuccin".setup {
-        -- styles = {
-        --   comments = { "italic" },
-        --   conditionals = { "italic" },
-        --   loops = { "italic", "bold" },
-        --   functions = { "bold" },
-        --   keywords = { "italic", "bold" },
-        --   strings = { "italic" },
-        --   variables = {},
-        --   numbers = {},
-        --   booleans = { "italic" },
-        --   properties = { "bold" },
-        --   types = { "bold" },
-        --   operators = { "bold" },
-        -- },
-      }
-      vim.cmd.colorscheme "catppuccin"
-    end
-  },
+  -- {
+  --   "catppuccin/nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     require"catppuccin".setup {
+  --       -- styles = {
+  --       --   comments = { "italic" },
+  --       --   conditionals = { "italic" },
+  --       --   loops = { "italic", "bold" },
+  --       --   functions = { "bold" },
+  --       --   keywords = { "italic", "bold" },
+  --       --   strings = { "italic" },
+  --       --   variables = {},
+  --       --   numbers = {},
+  --       --   booleans = { "italic" },
+  --       --   properties = { "bold" },
+  --       --   types = { "bold" },
+  --       --   operators = { "bold" },
+  --       -- },
+  --     }
+  --     vim.cmd.colorscheme "catppuccin"
+  --   end
+  -- },
 
   -- {
   --   "Shatur/neovim-ayu",
@@ -54,11 +54,29 @@ return {
   --   end
   -- },
 
+  {
+    "folke/tokyonight.nvim",
+    priority = 1000,
+    config = function ()
+      vim.cmd.colorscheme "tokyonight"
+    end
+  },
+
   -- {
-  --   "folke/tokyonight.nvim",
+  --   "olimorris/onedarkpro.nvim",
   --   priority = 1000,
   --   config = function ()
-  --     vim.cmd.colorscheme "tokyonight"
+  --     vim.opt.background = "light"
+  --     vim.cmd.colorscheme "onelight"
+  --   end
+  -- },
+
+  -- {
+  --   "NTBBloodbath/sweetie.nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     vim.opt.background = "light"
+  --     vim.cmd.colorscheme "sweetie"
   --   end
   -- },
 
@@ -79,7 +97,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require'nvim-treesitter.configs'.setup {
-        ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go", "markdown" },
+        ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go", "markdown", "markdown_inline" },
         highlight = {
           enable = true,
           additional_vim_regex_highlighting = false,
@@ -88,7 +106,7 @@ return {
     end
   },
 
-  { "szw/vim-maximizer", lazy = true },
+  { "szw/vim-maximizer", lazy = true, cmd = "MaximizerToggle" },
 
   {
     'nvim-lualine/lualine.nvim',
@@ -135,7 +153,7 @@ return {
   'ray-x/lsp_signature.nvim',
 
   {
-    'kyazdani42/nvim-tree.lua',
+    'nvim-tree/nvim-tree.lua',
     dependencies = { 'kyazdani42/nvim-web-devicons' },
     config = true
   },
@@ -249,7 +267,7 @@ return {
         }
       })
     end,
-    dependencies = { {"nvim-tree/nvim-web-devicons"} }
+    dependencies = { {"kyazdani42/nvim-web-devicons"} }
   },
 
   -- {
@@ -279,9 +297,9 @@ return {
         sources = {
           nls.builtins.formatting.stylua,
           nls.builtins.diagnostics.markdownlint,
-          nls.builtins.formatting.isort,
-          nls.builtins.formatting.black,
-          nls.builtins.diagnostics.flake8,
+          -- nls.builtins.formatting.isort,
+          -- nls.builtins.formatting.black,
+          -- nls.builtins.diagnostics.flake8,
           nls.builtins.formatting.gofumpt,
           nls.builtins.diagnostics.golangci_lint,
         },
@@ -289,5 +307,20 @@ return {
       })
     end,
   },
+
+  -- {
+  --   'tzachar/local-highlight.nvim',
+  --   config = function()
+  --   require('local-highlight').setup({
+  --     file_types = {'python', 'cpp', "go"},
+  --     hlgroup = 'Cursor',
+  --   })
+  --   end
+  -- },
+
+  {
+    'mhinz/vim-rfc',
+    cmd = "RFC",
+  }
 
 }

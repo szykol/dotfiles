@@ -7,7 +7,7 @@ local lspkind = require('lspkind')
 
 require("mason").setup()
 require("mason-lspconfig").setup {
-  ensure_installed = { "sumneko_lua", "rust_analyzer", "pyright", "gopls" },
+  ensure_installed = { "lua_ls", "rust_analyzer", "pylsp", "gopls" },
 }
 
 ls.config.set_config {
@@ -140,7 +140,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>r',  '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver', 'gopls' }
+local servers = { 'pylsp', 'vimls', 'rust_analyzer', 'texlab', 'tsserver', 'gopls' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -206,7 +206,7 @@ vim.diagnostic.config({
   severity_sort = false,
 })
 
-require'lspconfig'.sumneko_lua.setup {
+require'lspconfig'.lua_ls.setup {
   on_attach = on_attach,
   settings = {
     Lua = {

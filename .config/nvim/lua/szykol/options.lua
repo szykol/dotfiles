@@ -30,7 +30,6 @@ opt.inccommand = "split"
 opt.undodir = home .. "/.local/share/nvim/undodir"
 opt.undofile = true
 opt.shortmess:append "c"
-opt.background = "dark"
 opt.updatetime = 500
 opt.scrolloff = 8
 opt.termguicolors = true
@@ -43,5 +42,6 @@ opt.guifont = "UbuntuMono NF:h9"
 opt.pumheight = 10
 opt.laststatus = 3
 opt.wrap = true
+opt.fixendofline = false
 
 statuscolumn.set_global_statuscolumn()
