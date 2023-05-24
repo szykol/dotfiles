@@ -58,6 +58,7 @@ return {
     "folke/tokyonight.nvim",
     priority = 1000,
     config = function ()
+      vim.opt.background = "light"
       vim.cmd.colorscheme "tokyonight"
     end
   },
@@ -115,14 +116,20 @@ return {
         options = {
           component_separators = { left = '', right = ''},
           section_separators = { left = '', right = ''},
+          disabled_filetypes = {
+            statusline = {},
+            winbar = {
+              "dap-repl",
+            }
+          }
         },
         winbar = {
           lualine_c = { function() return require"lspsaga.symbolwinbar":get_winbar() or "" end },
-          lualine_x = { function() return vim.fn.expand("%F") end },
+          lualine_x = { "filename" },
         },
         inactive_winbar = {
           lualine_c = { "aerial" },
-          lualine_x = { function() return vim.fn.expand("%F") end },
+          lualine_x = { "filename" },
         },
         sections = {
           lualine_a = {'mode'},
@@ -130,8 +137,9 @@ return {
           lualine_c = { function() return vim.fn.expand("%F") end},
           lualine_x = {'encoding', 'fileformat', 'filetype'},
           lualine_y = {'progress'},
-          lualine_z = {'location'}
+          lualine_z = {'location'},
         },
+        extensions = { "nvim-dap-ui" },
     }
   },
 
@@ -170,7 +178,10 @@ return {
   'hrsh7th/cmp-nvim-lsp-signature-help',
 
   'p00f/clangd_extensions.nvim',
-  'mfussenegger/nvim-dap',
+
+  {
+    'mfussenegger/nvim-dap',
+  },
 
   {
     'rcarriga/nvim-dap-ui',
@@ -186,6 +197,11 @@ return {
       local dap_python = require"dap-python"
       dap_python.setup('~/.virtualenvs/debugpy/bin/python')
       dap_python.test_runner = "pytest"
+
+      local configurations = require"dap".configurations.python
+      for _, configuration in pairs(configurations) do
+        configuration.justMyCode = false
+      end
     end
   },
 
@@ -197,24 +213,35 @@ return {
     config = true,
   },
 
-  -- {
-  --   'nvim-neotest/neotest',
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim",
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "antoinemadec/FixCursorHold.nvim",
-  --     "nvim-neotest/neotest-go",
-  --     "nvim-neotest/neotest-python",
-  --   },
-  --   config = {
-  --     adapters = {
-  --       require('neotest-go'),
-  --       require('neotest-python')({
-  --         runner = "pytest"
-  --       })
-  --     }
-  --   }
-  -- },
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-neotest/neotest-go",
+      "nvim-neotest/neotest-python",
+    },
+    config = function()
+      local neotest_ns = vim.api.nvim_create_namespace("neotest")
+      vim.diagnostic.config({
+        virtual_text = {
+          format = function(diagnostic)
+            return diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+          end,
+
+        }}, neotest_ns)
+      require"neotest".setup({
+        adapters = {
+          require('neotest-go'),
+          require('neotest-python')({
+            runner = "pytest",
+            dap = { justMyCode = false },
+          })
+        }
+      })
+    end
+  },
   --
   -- {
   --   "ThePrimeagen/refactoring.nvim",
@@ -270,18 +297,7 @@ return {
     dependencies = { {"kyazdani42/nvim-web-devicons"} }
   },
 
-  -- {
-  --   "ThePrimeagen/git-worktree.nvim",
-  --   dependencies = {
-  --       "nvim-lua/plenary.nvim",
-  --       "nvim-telescope/telescope.nvim",
-  --   },
-  --   config = function()
-  --     require"telescope".load_extension("git_worktree")
-  --   end
-  -- }
-  --
-  'tpope/vim-fugitive',
+  -- 'tpope/vim-fugitive',
 
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
@@ -299,7 +315,7 @@ return {
           nls.builtins.diagnostics.markdownlint,
           -- nls.builtins.formatting.isort,
           -- nls.builtins.formatting.black,
-          -- nls.builtins.diagnostics.flake8,
+          nls.builtins.diagnostics.flake8,
           nls.builtins.formatting.gofumpt,
           nls.builtins.diagnostics.golangci_lint,
         },
@@ -308,19 +324,32 @@ return {
     end,
   },
 
-  -- {
-  --   'tzachar/local-highlight.nvim',
-  --   config = function()
-  --   require('local-highlight').setup({
-  --     file_types = {'python', 'cpp', "go"},
-  --     hlgroup = 'Cursor',
-  --   })
-  --   end
-  -- },
-
   {
     'mhinz/vim-rfc',
     cmd = "RFC",
+  },
+
+  {
+    "sindrets/diffview.nvim",
+  },
+
+  {
+    "luukvbaal/statuscol.nvim", config = function ()
+      require"statuscol".setup()
+    end
+  },
+
+  {
+    "lvimuser/lsp-inlayhints.nvim",
+    branch = "anticonceal",
+  },
+
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    branch = "inline-text",
+    config = function()
+      require"lsp-inlayhints".setup()
+    end
   }
 
 }

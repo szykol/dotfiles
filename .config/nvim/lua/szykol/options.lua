@@ -1,4 +1,4 @@
-local statuscolumn = require "szykol.statuscolumn"
+-- local statuscolumn = require "szykol.statuscolumn"
 local opt = vim.opt
 local home = vim.fn.expand('$HOME')
 
@@ -22,7 +22,7 @@ opt.number = true
 opt.relativenumber = true
 opt.termguicolors = true
 opt.showmode = false
-opt.switchbuf = "useopen"
+-- opt.switchbuf = "useopen"
 opt.signcolumn = "yes"
 opt.showcmd = false
 opt.ruler = false
@@ -44,4 +44,4 @@ opt.laststatus = 3
 opt.wrap = true
 opt.fixendofline = false
 
-statuscolumn.set_global_statuscolumn()
+-- statuscolumn.set_global_statuscolumn()

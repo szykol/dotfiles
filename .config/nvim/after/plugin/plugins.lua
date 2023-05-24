@@ -23,17 +23,17 @@ ls.config.set_config {
   },
 }
 
-vim.keymap.set({ "i", "s" }, "<c-j>", function()
-  if ls.expand_or_jumpable() then
-    ls.expand_or_jump()
-  end
-end, { silent = true })
-
-vim.keymap.set({ "i", "s" }, "<c-k>", function()
-  if ls.jumpable(-1) then
-    ls.jump(-1)
-  end
-end, { silent = true })
+-- vim.keymap.set({ "i", "s" }, "<c-j>", function()
+--   if ls.expand_or_jumpable() then
+--     ls.expand_or_jump()
+--   end
+-- end, { silent = true })
+--
+-- vim.keymap.set({ "i", "s" }, "<c-k>", function()
+--   if ls.jumpable(-1) then
+--     ls.jump(-1)
+--   end
+-- end, { silent = true })
 
 vim.keymap.set("i", "<c-l>", function()
   if ls.choice_active() then
@@ -64,7 +64,7 @@ cmp.setup({
         i = cmp.mapping.abort(),
         c = cmp.mapping.close(),
       }),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     },
     sources = {
       { name = 'nvim_lsp_signature_help' },
@@ -116,6 +116,8 @@ local on_attach = function(client, bufnr)
     require'virtualtypes'.on_attach(client, bufnr)
   end
 
+  require"lsp-inlayhints".on_attach(client, bufnr)
+
   -- Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -131,7 +133,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>D',  '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.keymap.set('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
   vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
-  vim.keymap.set('n', 'gr',         '<cmd>Telescope lsp_references<CR>', opts)
+  vim.keymap.set('n', 'gr',         '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.keymap.set('n', '<leader>sd', '<cmd>Lspsaga show_line_diagnostics<CR>', opts)
   vim.keymap.set('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
   vim.keymap.set('n', '<leader>sk', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
@@ -140,7 +142,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>r',  '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local servers = { 'pylsp', 'vimls', 'rust_analyzer', 'texlab', 'tsserver', 'gopls' }
+local servers = { 'pylsp', 'vimls', 'rust_analyzer', 'texlab', 'tsserver' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -205,6 +207,27 @@ vim.diagnostic.config({
   update_in_insert = false,
   severity_sort = false,
 })
+
+require"lspconfig".gopls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,
+      },
+      staticcheck = true,
+      hints = {
+        assignVariableTypes=true,
+        compositeLiteralFields=true,
+        constantValues=true,
+        functionTypeParameters=true,
+        parameterNames=true,
+        rangeVariableTypes=true,
+      }
+    }
+  }
+}
 
 require'lspconfig'.lua_ls.setup {
   on_attach = on_attach,

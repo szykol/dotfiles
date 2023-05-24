@@ -49,6 +49,8 @@ nnoremap("<leader>dk", function() require"dap".step_out() end)
 nnoremap("<leader>dg", function() require"dap".continue() end)
 nnoremap("<leader>db", function() require"dap".toggle_breakpoint() end)
 nnoremap("<leader>dt", function() require"dapui".toggle() end)
+nnoremap("<leader>dn", function() require"neotest".run.run() end)
+nnoremap("<leader>dN", function() require"neotest".run.run({strategy="dap"}) end)
 
 nnoremap("<leader>nt", ":NvimTreeToggle<CR>")
 nnoremap("<leader>nr", ":NvimTreeRefresh<CR>")
