@@ -7,7 +7,7 @@ local lspkind = require('lspkind')
 
 require("mason").setup()
 require("mason-lspconfig").setup {
-  ensure_installed = { "lua_ls", "rust_analyzer", "pylsp", "gopls" },
+  ensure_installed = { "lua_ls", "rust_analyzer", "pyright", "gopls" },
 }
 
 ls.config.set_config {
@@ -116,7 +116,9 @@ local on_attach = function(client, bufnr)
     require'virtualtypes'.on_attach(client, bufnr)
   end
 
-  require"lsp-inlayhints".on_attach(client, bufnr)
+  if client.supports_method('textDocument/inlayHint') then
+    vim.lsp.buf.inlay_hint(bufnr, true)
+  end
 
   -- Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -140,9 +142,11 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>sj', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
   vim.keymap.set('n', '<leader>q',  '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   vim.keymap.set('n', '<leader>r',  '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  vim.keymap.set('n', '<leader>iy',  function() vim.lsp.buf.inlay_hint(bufnr, true) end, opts)
+  vim.keymap.set('n', '<leader>in',  function() vim.lsp.buf.inlay_hint(bufnr, false) end, opts)
 end
 
-local servers = { 'pylsp', 'vimls', 'rust_analyzer', 'texlab', 'tsserver' }
+local servers = { 'pyright', 'vimls', 'rust_analyzer', 'texlab', 'tsserver' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -164,7 +168,7 @@ require("clangd_extensions").setup {
   extensions = {
     -- defaults:
     -- Automatically set inlay hints (type hints)
-    autoSetHints = true,
+    autoSetHints = false,
     -- Whether to show hover actions inside the hover window
     -- This overrides the default hover handler
     hover_with_actions = true,
@@ -233,6 +237,9 @@ require'lspconfig'.lua_ls.setup {
   on_attach = on_attach,
   settings = {
     Lua = {
+      hint = {
+        enable = true,
+      },
       runtime = {
         version = 'LuaJIT',
         path = vim.split(package.path, ';'),
