@@ -23,18 +23,6 @@ ls.config.set_config {
   },
 }
 
--- vim.keymap.set({ "i", "s" }, "<c-j>", function()
---   if ls.expand_or_jumpable() then
---     ls.expand_or_jump()
---   end
--- end, { silent = true })
---
--- vim.keymap.set({ "i", "s" }, "<c-k>", function()
---   if ls.jumpable(-1) then
---     ls.jump(-1)
---   end
--- end, { silent = true })
-
 vim.keymap.set("i", "<c-l>", function()
   if ls.choice_active() then
     ls.change_choice(1)
@@ -111,10 +99,6 @@ local nvim_lsp = require("lspconfig")
 
 local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  if client.supports_method('textDocument/codeLens') then
-    require'virtualtypes'.on_attach(client, bufnr)
-  end
 
   if client.supports_method('textDocument/inlayHint') then
     vim.lsp.buf.inlay_hint(bufnr, true)
@@ -257,37 +241,19 @@ require'lspconfig'.lua_ls.setup {
   },
 }
 
-
--- vim.g.symbols_outline = {
---   highlight_hovered_item = true,
---   show_guides = true,
---   position = 'right',
---   keymaps = {
---     close = "<Esc>",
---     goto_location = "<Cr>",
---     focus_location = "o",
---     hover_symbol = "<C-space>",
---     rename_symbol = "r",
---     code_actions = "a",
---   },
---   lsp_blacklist = {},
--- }
-
 local signs = { Error = " ", Warn = " ", Info = " ", Hint = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
--- local rt = require("rust-tools")
--- rt.setup()
---
 local dap = require('dap')
 dap.adapters.lldb = {
   type = 'executable',
   command = '/usr/bin/lldb-vscode', -- adjust as needed, must be absolute path
   name = 'lldb'
 }
+
 dap.configurations.rust = {
   {
     name = "Launch",
