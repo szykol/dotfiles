@@ -1,4 +1,4 @@
-vim.api.nvim_create_augroup("SZYKOL", { clear = true })
+local group = vim.api.nvim_create_augroup("SZYKOL", { clear = true })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
   group = group,
@@ -10,18 +10,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = group,
   pattern = "*",
   callback = function() vim.highlight.on_yank({on_visual = true}) end
-})
-
--- vim.api.nvim_create_autocmd("BufWritePost", {
---   group = vim.api.nvim_create_augroup("SZYKOL", { clear = true }),
---   pattern = "*.py",
---   command = "Black"
--- }
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = group,
-  pattern = "*",
-  callback = function() require"utils".perform_upload() end
 })
 
 vim.api.nvim_create_autocmd("BufWritePost", {

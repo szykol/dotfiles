@@ -5,6 +5,8 @@ local vnoremap = keymap.vnoremap
 local xnoremap = keymap.xnoremap
 local inoremap = keymap.inoremap
 local tnoremap = keymap.tnoremap
+local nmap = keymap.nmap
+local xmap = keymap.xmap
 
 local utils = require("utils")
 
@@ -28,13 +30,14 @@ nnoremap("<leader>tt", ":term<CR>")
 
 -- Telescope
 nnoremap("<leader>t",   "<CMD>Telescope<CR>")
-nnoremap("<leader>tF",  "<CMD>Telescope find_files theme=ivy<CR>")
-nnoremap("<leader>tc",  "<CMD>Telescope find_files cwd=$HOME/.config/nvim theme=ivy<CR>")
-nnoremap("<leader>tf",  "<CMD>Telescope git_files theme=ivy<CR>")
-nnoremap("<leader>tr",  "<CMD>Telescope live_grep theme=ivy<CR>")
-nnoremap("<leader>tb",  "<CMD>Telescope buffers theme=ivy<CR>")
-nnoremap("<leader>th",  "<CMD>Telescope help_tags theme=ivy<CR>")
-nnoremap("<leader>tg",  "<CMD>Telescope git_branches theme=ivy<CR>")
+nnoremap("<leader>tF",  "<CMD>Telescope find_files<CR>")
+nnoremap("<leader>tc",  "<CMD>Telescope find_files cwd=$HOME/.config/nvim<CR>")
+nnoremap("<leader>tf",  "<CMD>Telescope git_files<CR>")
+nnoremap("<leader>f",   function() require"telescope.builtin".git_files({use_git_root=false, show_untracked=true}) end)
+nnoremap("<leader>tr",  "<CMD>Telescope live_grep>")
+nnoremap("<leader>tb",  "<CMD>Telescope buffers>")
+nnoremap("<leader>th",  "<CMD>Telescope help_tags<CR>")
+nnoremap("<leader>tg",  "<CMD>Telescope git_branches<CR>")
 nnoremap("<leader>P",   "<CMD>Telescope command_center<CR>")
 nnoremap("<leader>tws",  function() require('telescope').extensions.git_worktree.git_worktrees() end)
 nnoremap("<leader>twc",  function() require('telescope').extensions.git_worktree.create_git_worktree() end)
@@ -55,7 +58,17 @@ nnoremap("<leader>dN", function() require"neotest".run.run({strategy="dap"}) end
 nnoremap("<leader>nt", ":NvimTreeToggle<CR>")
 nnoremap("<leader>nr", ":NvimTreeRefresh<CR>")
 nnoremap("<leader>nf", ":NvimTreeFindFile<CR>")
-vnoremap("<leader>rr", ":<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>")
+-- vnoremap("<leader>rr", ":<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>")
 
 nnoremap("<leader>gj", ":Gitsigns next_hunk<CR>")
 nnoremap("<leader>gk", ":Gitsigns prev_hunk<CR>")
+nnoremap("<leader>gdo", ":DiffviewOpen<CR>")
+nnoremap("<leader>gdc", ":DiffviewClose<CR>")
+
+nnoremap("<leader>ha", function() require("harpoon.mark").add_file() end)
+nnoremap("<leader>hq", function() require("harpoon.ui").toggle_quick_menu() end)
+nnoremap("<leader>hn", function() require("harpoon.ui").nav_next() end)
+nnoremap("<leader>hp", function() require("harpoon.ui").nav_prev() end)
+
+xnoremap("ga", "<Plug>(EasyAlign)")
+nnoremap("ga", "<Plug>(EasyAlign)")

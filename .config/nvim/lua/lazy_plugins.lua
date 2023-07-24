@@ -1,59 +1,6 @@
 return {
   "folke/which-key.nvim",
 
-  -- {
-  --   'lalitmee/cobalt2.nvim',
-  --   dependencies = { 'tjdevries/colorbuddy.nvim' },
-  --   priority = 1000,
-  --   config = function ()
-  --     require"colorbuddy".colorscheme('cobalt2')
-  --     require"hlargs".setup()
-  --   end
-  -- },
-
-  -- {
-  --   'Yagua/nebulous.nvim',
-  --   dependencies = { 'tjdevries/colorbuddy.nvim' },
-  --   priority = 1000,
-  --   config = function ()
-  --     require"colorbuddy".colorscheme('nebulous')
-  --     require("nebulous.functions").set_variant("twilight")
-  --     require"hlargs".setup()
-  --   end
-  -- },
-
-  -- {
-  --   "catppuccin/nvim",
-  --   priority = 1000,
-  --   config = function ()
-  --     require"catppuccin".setup {
-  --       -- styles = {
-  --       --   comments = { "italic" },
-  --       --   conditionals = { "italic" },
-  --       --   loops = { "italic", "bold" },
-  --       --   functions = { "bold" },
-  --       --   keywords = { "italic", "bold" },
-  --       --   strings = { "italic" },
-  --       --   variables = {},
-  --       --   numbers = {},
-  --       --   booleans = { "italic" },
-  --       --   properties = { "bold" },
-  --       --   types = { "bold" },
-  --       --   operators = { "bold" },
-  --       -- },
-  --     }
-  --     vim.cmd.colorscheme "catppuccin"
-  --   end
-  -- },
-
-  -- {
-  --   "Shatur/neovim-ayu",
-  --   priority = 1000,
-  --   config = function ()
-  --     require('ayu').colorscheme()
-  --   end
-  -- },
-
   {
     "folke/tokyonight.nvim",
     priority = 1000,
@@ -62,24 +9,6 @@ return {
       vim.cmd.colorscheme "tokyonight"
     end
   },
-
-  -- {
-  --   "olimorris/onedarkpro.nvim",
-  --   priority = 1000,
-  --   config = function ()
-  --     vim.opt.background = "light"
-  --     vim.cmd.colorscheme "onelight"
-  --   end
-  -- },
-
-  -- {
-  --   "NTBBloodbath/sweetie.nvim",
-  --   priority = 1000,
-  --   config = function ()
-  --     vim.opt.background = "light"
-  --     vim.cmd.colorscheme "sweetie"
-  --   end
-  -- },
 
   {
     "dstein64/vim-startuptime",
@@ -133,7 +62,7 @@ return {
         },
         sections = {
           lualine_a = {'mode'},
-          lualine_b = {'branch', 'diff', 'diagnostics'},
+          lualine_b = {'branch'},
           lualine_c = { function() return vim.fn.expand("%F") end},
           lualine_x = {'encoding', 'fileformat', 'filetype'},
           lualine_y = {'progress'},
@@ -158,7 +87,10 @@ return {
   },
 
   'onsails/lspkind-nvim',
-  'ray-x/lsp_signature.nvim',
+  {
+    'ray-x/lsp_signature.nvim',
+    config = true,
+  },
 
   {
     'nvim-tree/nvim-tree.lua',
@@ -181,14 +113,13 @@ return {
 
   {
     'mfussenegger/nvim-dap',
+    lazy = true,
   },
 
   {
     'rcarriga/nvim-dap-ui',
     config = true,
-    -- config = function()
-    --   require"dapui".setup()
-    -- end
+    lazy = true,
   },
 
   {
@@ -202,14 +133,11 @@ return {
       for _, configuration in pairs(configurations) do
         configuration.justMyCode = false
       end
-    end
+    end,
   },
 
   {
     'leoluz/nvim-dap-go',
-    -- config = function()
-    --   require"dap-go".setup()
-    -- end
     config = true,
   },
 
@@ -240,31 +168,11 @@ return {
           })
         }
       })
-    end
+    end,
   },
-  --
-  -- {
-  --   "ThePrimeagen/refactoring.nvim",
-  --   dependencies = {
-  --       {"nvim-lua/plenary.nvim"},
-  --       {"nvim-treesitter/nvim-treesitter"}
-  --   },
-  --   config = function()
-  --     require"telescope".load_extension("refactoring")
-  --   end
-  -- },
 
-  'jubnzv/virtual-types.nvim',
-  'Mofiqul/trld.nvim',
-
-
-  -- {
-  --   'rmagatti/auto-session',
-  --   config = {
-  --     log_level = 'info',
-  --     auto_session_suppress_dirs = {'~/', '~/Projects'}
-  --   },
-  -- },
+  -- 'jubnzv/virtual-types.nvim',
+  -- 'Mofiqul/trld.nvim',
 
   {
     'ray-x/go.nvim',
@@ -281,7 +189,10 @@ return {
     config = true,
   },
 
-  'm-demare/hlargs.nvim',
+  {
+    'm-demare/hlargs.nvim',
+    config = true,
+  },
 
   {
     "glepnir/lspsaga.nvim",
@@ -297,7 +208,10 @@ return {
     dependencies = { {"kyazdani42/nvim-web-devicons"} }
   },
 
-  -- 'tpope/vim-fugitive',
+  {
+    'tpope/vim-fugitive',
+    lazy = true,
+  },
 
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
@@ -316,7 +230,7 @@ return {
           -- nls.builtins.formatting.isort,
           -- nls.builtins.formatting.black,
           -- nls.builtins.diagnostics.flake8,
-          nls.builtins.diagnostics.ruff,
+          -- nls.builtins.diagnostics.ruff,
           nls.builtins.formatting.gofumpt,
           nls.builtins.diagnostics.golangci_lint,
         },
@@ -328,6 +242,7 @@ return {
   {
     'mhinz/vim-rfc',
     cmd = "RFC",
+    lazy = true,
   },
 
   {
@@ -335,7 +250,8 @@ return {
   },
 
   {
-    "luukvbaal/statuscol.nvim", config = function ()
+    "luukvbaal/statuscol.nvim",
+    config = function ()
       require"statuscol".setup()
     end
   },
@@ -345,7 +261,7 @@ return {
     branch = "inline-text",
     config = function()
       require"nvim-dap-virtual-text".setup()
-    end
+    end,
   },
 
   {
@@ -376,6 +292,28 @@ return {
         },
       }
     end,
+  },
+
+  {
+    "ThePrimeagen/harpoon",
+  },
+
+  {
+    "junegunn/vim-easy-align",
+  },
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {}
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
   },
 
 }
