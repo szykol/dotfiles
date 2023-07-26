@@ -13,6 +13,7 @@ require'nvim-treesitter.configs'.setup {
         ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
         ["iq"] = "@parameter.outer",
         ["aq"] = "@parameter.inner",
+        ["in"] = "@function.name",
       },
       selection_modes = {
         ['@parameter.outer'] = 'v', -- charwise

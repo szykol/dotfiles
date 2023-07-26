@@ -165,6 +165,7 @@ return {
           require('neotest-python')({
             runner = "pytest",
             dap = { justMyCode = false },
+            python = function () return vim.fn.getcwd() .. "/.venv/bin/python" end,
           })
         }
       })
@@ -315,5 +316,19 @@ return {
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
   },
+
+  {
+      "nvim-telescope/telescope-file-browser.nvim",
+      dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+      config = function ()
+        require("telescope").load_extension "file_browser"
+      end
+  },
+
+  {
+    "nvim-treesitter/playground",
+    lazy = true,
+    cmd = "TSPlaygroundToggle",
+  }
 
 }

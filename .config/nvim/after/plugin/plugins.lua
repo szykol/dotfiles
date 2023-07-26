@@ -55,7 +55,6 @@ cmp.setup({
       ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     },
     sources = {
-      { name = 'nvim_lsp_signature_help' },
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'buffer' },
@@ -101,7 +100,7 @@ local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
   if client.supports_method('textDocument/inlayHint') then
-    vim.lsp.buf.inlay_hint(bufnr, true)
+    vim.lsp.inlay_hint(bufnr, true)
   end
 
   -- Enable completion triggered by <c-x><c-o>
