@@ -39,40 +39,6 @@ return {
   { "szw/vim-maximizer", lazy = true, cmd = "MaximizerToggle" },
 
   {
-    'nvim-lualine/lualine.nvim',
-    dependencies = {'kyazdani42/nvim-web-devicons'},
-    config = {
-        options = {
-          component_separators = { left = '', right = ''},
-          section_separators = { left = '', right = ''},
-          disabled_filetypes = {
-            statusline = {},
-            winbar = {
-              "dap-repl",
-            }
-          }
-        },
-        winbar = {
-          lualine_c = { function() return require"lspsaga.symbolwinbar":get_winbar() or "" end },
-          lualine_x = { "filename" },
-        },
-        inactive_winbar = {
-          lualine_c = { "aerial" },
-          lualine_x = { "filename" },
-        },
-        sections = {
-          lualine_a = {'mode'},
-          lualine_b = {'branch'},
-          lualine_c = { function() return vim.fn.expand("%F") end},
-          lualine_x = {'encoding', 'fileformat', 'filetype'},
-          lualine_y = {'progress'},
-          lualine_z = {'location'},
-        },
-        extensions = { "nvim-dap-ui" },
-    }
-  },
-
-  {
     "stevearc/aerial.nvim",
     config = function ()
       require "aerial".setup()
@@ -329,6 +295,8 @@ return {
     "nvim-treesitter/playground",
     lazy = true,
     cmd = "TSPlaygroundToggle",
-  }
+  },
+
+  "szykol/statusline.nvim",
 
 }
