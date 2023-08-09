@@ -1,12 +1,23 @@
 return {
   "folke/which-key.nvim",
 
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     vim.opt.background = "dark"
+  --     vim.cmd.colorscheme "tokyonight"
+  --   end
+  -- },
+
   {
-    "folke/tokyonight.nvim",
+    "navarasu/onedark.nvim",
     priority = 1000,
     config = function ()
-      vim.opt.background = "dark"
-      vim.cmd.colorscheme "tokyonight"
+      require"onedark".setup{
+        style = "deep",
+      }
+      vim.cmd.colorscheme "onedark"
     end
   },
 
@@ -19,7 +30,15 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     config = {
-      current_line_blame = true
+      current_line_blame = true,
+      signs = {
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
+      },
     },
   },
 
@@ -178,6 +197,7 @@ return {
   {
     'tpope/vim-fugitive',
     lazy = true,
+    cmd = "Git",
   },
 
   "williamboman/mason-lspconfig.nvim",
