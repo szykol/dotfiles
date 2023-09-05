@@ -1,23 +1,32 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Inserts a blank line between shell prompts
 add_newline = false
 
-# right_format = """$kubernetes"""
-
-# Replace the "❯" symbol in the prompt with "➜"
-[character] # The name of the module we are configuring is "character"
-success_symbol = "[➜](bold green)" # The "success_symbol" segment is being set to "➜" with the color "bold green"
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
 
 [kubernetes]
 disabled = true
-# format = '[$symbol$context( \($namespace\))]($style)'
 
 [line_break]
-disabled = false
+disabled = true
 
 [directory]
 truncate_to_repo = false
 fish_style_pwd_dir_length = 1
 truncation_length = 1
+
+[git_branch]
+format = '\($branch(:$remote_branch)\) '
+
+[git_status]
+disabled = true
+
+[status]
+disabled = false
+pipestatus = true
+format = '\[[$status]($style)\] '
+pipestatus_segment_format = '[$status]($style)'
+pipestatus_format = '\[$pipestatus\]($style) '
