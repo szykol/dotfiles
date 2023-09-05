@@ -1,5 +1,5 @@
 return {
-  "folke/which-key.nvim",
+  -- "folke/which-key.nvim",
 
   -- {
   --   "folke/tokyonight.nvim",
@@ -39,7 +39,14 @@ return {
         changedelete = { text = '~' },
         untracked    = { text = '┆' },
       },
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'eol',
+        delay = 1000,
+        ignore_whitespace = false,
+      },
     },
+    event = "VeryLazy",
   },
 
   {
@@ -62,13 +69,15 @@ return {
     config = function ()
       require "aerial".setup()
       require "telescope".load_extension('aerial')
-    end
+    end,
+    event = "VeryLazy",
   },
 
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { "nvim-lua/plenary.nvim" },
     config = true,
+    event = "VeryLazy",
   },
 
   'onsails/lspkind-nvim',
@@ -78,10 +87,28 @@ return {
   },
 
   {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = { 'kyazdani42/nvim-web-devicons' },
-    config = true
+    "nvim-neo-tree/neo-tree.nvim",
+    keys = {
+      { "<leader>nt", "<cmd>Neotree toggle<CR>", desc = "NeoTree" },
+    },
+    config = function ()
+      require"neo-tree".setup{}
+    end,
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    opts = {
+      source_selector = {
+        winbar = true,
+        statusline = false,
+      },
+    },
+
   },
+
 
   'L3MON4D3/LuaSnip',
   'hrsh7th/cmp-nvim-lsp',
@@ -89,12 +116,13 @@ return {
   'saadparwaiz1/cmp_luasnip',
   'hrsh7th/nvim-cmp',
   'hrsh7th/cmp-path',
-  'hrsh7th/cmp-calc',
   'f3fora/cmp-spell',
   'hrsh7th/cmp-cmdline',
-  'hrsh7th/cmp-nvim-lsp-signature-help',
 
-  'p00f/clangd_extensions.nvim',
+  {
+    'p00f/clangd_extensions.nvim',
+    ft = { "cpp", "c" },
+  },
 
   {
     'mfussenegger/nvim-dap',
@@ -104,11 +132,12 @@ return {
   {
     'rcarriga/nvim-dap-ui',
     config = true,
-    lazy = true,
+    event = "VeryLazy",
   },
 
   {
     'mfussenegger/nvim-dap-python',
+    ft = "python",
     config = function()
       local dap_python = require"dap-python"
       dap_python.setup('~/.virtualenvs/debugpy/bin/python')
@@ -124,6 +153,7 @@ return {
   {
     'leoluz/nvim-dap-go',
     config = true,
+    ft = "go",
   },
 
   {
@@ -155,6 +185,7 @@ return {
         }
       })
     end,
+    lazy = true,
   },
 
   -- 'jubnzv/virtual-types.nvim',
@@ -163,15 +194,11 @@ return {
   {
     'ray-x/go.nvim',
     config = true,
+    ft = "go",
   },
 
   {
     'numToStr/Comment.nvim',
-    config = true,
-  },
-
-  {
-    'nvim-treesitter/nvim-treesitter-context',
     config = true,
   },
 
@@ -191,13 +218,14 @@ return {
         }
       })
     end,
-    dependencies = { {"kyazdani42/nvim-web-devicons"} }
+    dependencies = { {"nvim-tree/nvim-web-devicons"} },
+    lazy = true,
   },
 
   {
     'tpope/vim-fugitive',
     lazy = true,
-    cmd = "Git",
+    event = "VeryLazy",
   },
 
   "williamboman/mason-lspconfig.nvim",
@@ -234,14 +262,15 @@ return {
 
   {
     "sindrets/diffview.nvim",
+    event = "VeryLazy",
   },
 
-  {
-    "luukvbaal/statuscol.nvim",
-    config = function ()
-      require"statuscol".setup()
-    end
-  },
+  -- {
+  --   "luukvbaal/statuscol.nvim",
+  --   config = function ()
+  --     require"statuscol".setup()
+  --   end
+  -- },
 
   {
     "theHamsta/nvim-dap-virtual-text",
@@ -249,6 +278,7 @@ return {
     config = function()
       require"nvim-dap-virtual-text".setup()
     end,
+    event = "VeryLazy",
   },
 
   {
@@ -262,6 +292,7 @@ return {
 
   {
     "nvim-neorg/neorg",
+    ft = "norg",
     build = ":Neorg sync-parsers",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
@@ -283,40 +314,26 @@ return {
 
   {
     "ThePrimeagen/harpoon",
+    event = "VeryLazy",
   },
 
   {
     "junegunn/vim-easy-align",
   },
 
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.o.timeout = true
-      vim.o.timeoutlen = 300
-    end,
-    opts = {}
-  },
-
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-  },
+  -- {
+  --   "nvim-treesitter/nvim-treesitter-textobjects",
+  -- },
 
   {
       "nvim-telescope/telescope-file-browser.nvim",
       dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
       config = function ()
         require("telescope").load_extension "file_browser"
-      end
-  },
-
-  {
-    "nvim-treesitter/playground",
-    lazy = true,
-    cmd = "TSPlaygroundToggle",
+      end,
+      event = "VeryLazy",
   },
 
   "szykol/statusline.nvim",
-
+{ 'echasnovski/mini.nvim', version = '*' },
 }
