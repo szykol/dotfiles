@@ -1,6 +1,8 @@
 autoload -Uz compinit
 compinit
 
+export EDITOR=nvim
+
 source ${ZDOTDIR:-$HOME}/.antidote/antidote.zsh
 antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
 
