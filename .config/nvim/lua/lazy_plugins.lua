@@ -316,11 +316,6 @@ return {
   {
     "junegunn/vim-easy-align",
   },
-
-  -- {
-  --   "nvim-treesitter/nvim-treesitter-textobjects",
-  -- },
-
   {
       "nvim-telescope/telescope-file-browser.nvim",
       dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
@@ -331,5 +326,4 @@ return {
   },
 
   "szykol/statusline.nvim",
-{ 'echasnovski/mini.nvim', version = '*' },
 }
