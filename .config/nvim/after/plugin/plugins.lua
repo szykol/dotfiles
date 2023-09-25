@@ -29,10 +29,11 @@ vim.keymap.set("i", "<c-l>", function()
   end
 end, { silent = true })
 
+
 cmp.setup({
     window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered({scrollbar = false}),
+        documentation = cmp.config.window.bordered({scrollbar = false}),
     },
     snippet = {
       expand = function(args)
@@ -210,7 +211,6 @@ require("clangd_extensions").setup({
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   border = "single",
-  title = "hover"
 })
 
 vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {

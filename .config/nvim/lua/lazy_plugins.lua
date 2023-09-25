@@ -16,6 +16,15 @@ return {
     config = function ()
       require"onedark".setup{
         style = "deep",
+        highlights = {
+          ["NormalFloat"] = {
+            bg="#1a212e",
+          },
+          ["FloatBorder"] = {
+            fg="#93a4c3",
+            bg="#1a212e",
+          },
+        },
       }
       vim.cmd.colorscheme "onedark"
     end
