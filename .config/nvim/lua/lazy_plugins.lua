@@ -82,11 +82,6 @@ return {
 
   'onsails/lspkind-nvim',
   {
-    'ray-x/lsp_signature.nvim',
-    config = true,
-  },
-
-  {
     "nvim-neo-tree/neo-tree.nvim",
     keys = {
       { "<leader>nt", "<cmd>Neotree toggle<CR>", desc = "NeoTree" },
@@ -111,6 +106,7 @@ return {
 
 
   'L3MON4D3/LuaSnip',
+  'hrsh7th/cmp-nvim-lsp-signature-help',
   'hrsh7th/cmp-nvim-lsp',
   'hrsh7th/cmp-buffer',
   'saadparwaiz1/cmp_luasnip',

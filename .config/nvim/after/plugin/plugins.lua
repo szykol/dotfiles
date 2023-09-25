@@ -30,6 +30,10 @@ vim.keymap.set("i", "<c-l>", function()
 end, { silent = true })
 
 cmp.setup({
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
     snippet = {
       expand = function(args)
         require('luasnip').lsp_expand(args.body)
@@ -108,21 +112,21 @@ local on_attach = function(client, bufnr)
 
   local opts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', 'gD',         '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.keymap.set('n', 'gd',         '<cmd>Lspsaga goto_definition<CR>', opts)
-  vim.keymap.set('n', 'K',          '<cmd>Lspsaga hover_doc<CR>', opts)
+  vim.keymap.set('n', 'gd',         '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  vim.keymap.set('n', 'K',          '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   vim.keymap.set('n', 'gi',         '<cmd>Telescope lsp_implementations<CR>', opts)
   -- vim.keymap.set('n', '<C-s>', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<CR>', opts)
   vim.keymap.set('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   vim.keymap.set('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   vim.keymap.set('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.keymap.set('n', '<leader>D',  '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  vim.keymap.set('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
-  vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
+  vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   vim.keymap.set('n', 'gr',         '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.keymap.set('n', '<leader>sd', '<cmd>Lspsaga show_line_diagnostics<CR>', opts)
   vim.keymap.set('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
-  vim.keymap.set('n', '<leader>sk', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
-  vim.keymap.set('n', '<leader>sj', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+  vim.keymap.set('n', '<leader>sk', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  vim.keymap.set('n', '<leader>sj', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   vim.keymap.set('n', '<leader>q',  '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   vim.keymap.set('n', '<leader>r',  '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
   vim.keymap.set('n', '<leader>iy',  function() vim.lsp.buf.inlay_hint(bufnr, true) end, opts)
@@ -204,12 +208,29 @@ require("clangd_extensions").setup({
     },
 })
 
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+  border = "single",
+  title = "hover"
+})
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+  border = "single",
+})
+
 vim.diagnostic.config({
   virtual_text = false,
   signs = true,
   underline = false,
   update_in_insert = false,
   severity_sort = false,
+  float = {
+    focusable = true,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
 })
 
 require"lspconfig".gopls.setup {
