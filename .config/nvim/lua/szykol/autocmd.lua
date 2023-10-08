@@ -12,11 +12,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function() vim.highlight.on_yank({on_visual = true}) end
 })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = group,
-  pattern = "*go",
-  command = "GoFmt"
-})
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--   group = group,
+--   pattern = "*go",
+--   command = "GoFmt"
+-- })
 
 vim.api.nvim_create_autocmd("FileType", {
   group = group,
@@ -37,5 +37,17 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt.softtabstop = 2
     vim.opt.shiftwidth = 2
+  end
+})
+
+vim.api.nvim_create_autocmd("InsertLeavePre", {
+  callback = function ()
+    vim.lsp.inlay_hint(0, true)
+  end
+})
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+  callback = function ()
+    vim.lsp.inlay_hint(0, false)
   end
 })

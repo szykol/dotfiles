@@ -30,12 +30,13 @@ opt.inccommand = "split"
 opt.undodir = home .. "/.local/share/nvim/undodir"
 opt.undofile = true
 opt.shortmess:append "c"
-opt.updatetime = 500
+opt.updatetime = 250
+opt.timeoutlen = 300
 opt.scrolloff = 8
 opt.termguicolors = true
 opt.mouse = "a"
 opt.hlsearch = false
-opt.completeopt = "menu,menuone,noselect"
+opt.completeopt = "menuone,noselect"
 opt.clipboard:append "unnamedplus"
 opt.equalalways = false
 opt.guifont = "UbuntuMono NF:h9"

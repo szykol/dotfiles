@@ -10,10 +10,10 @@ local xmap = keymap.xmap
 
 local utils = require("utils")
 
-nnoremap("<C-h>", ":wincmd h<CR>")
-nnoremap("<C-j>", ":wincmd j<CR>")
-nnoremap("<C-l>", ":wincmd l<CR>")
-nnoremap("<C-k>", ":wincmd k<CR>")
+nnoremap("<C-h>", ":wincmd h<CR>", {silent = true})
+nnoremap("<C-j>", ":wincmd j<CR>", {silent = true})
+nnoremap("<C-l>", ":wincmd l<CR>", {silent = true})
+nnoremap("<C-k>", ":wincmd k<CR>", {silent = true})
 
 tnoremap("<Esc>", [[<C-\><C-n>]])
 -- tnoremap("<C-[", [[<C-\><C-n>]])
@@ -37,6 +37,7 @@ nnoremap("<leader>f",   function() require"telescope.builtin".git_files({use_git
 nnoremap("<leader>tr",  "<CMD>Telescope live_grep<CR>")
 nnoremap("<leader>tb",  "<CMD>Telescope buffers<CR>")
 nnoremap("<leader>th",  "<CMD>Telescope help_tags<CR>")
+nnoremap("<leader>ta",  "<CMD>Telescope aerial<CR>")
 nnoremap("<leader>tg",  "<CMD>Telescope git_branches<CR>")
 nnoremap("<leader>P",   "<CMD>Telescope command_center<CR>")
 nnoremap("<leader>tws",  function() require('telescope').extensions.git_worktree.git_worktrees() end)

@@ -9,26 +9,53 @@ return {
   --     vim.cmd.colorscheme "tokyonight"
   --   end
   -- },
+--   {
+--   'roobert/palette.nvim',
+--   lazy = false,
+--   priority = 1000,
+--   config = function()
+--     vim.cmd("colorscheme palette")
+--   end
+-- },
+--
+  -- {
+  --   "EdenEast/nightfox.nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     vim.cmd.colorscheme "nightfox"
+  --   end
+  -- },
+  --
 
   {
-    "navarasu/onedark.nvim",
+    'catppuccin/nvim',
     priority = 1000,
     config = function ()
-      require"onedark".setup{
-        style = "deep",
-        highlights = {
-          ["NormalFloat"] = {
-            bg="#1a212e",
-          },
-          ["FloatBorder"] = {
-            fg="#93a4c3",
-            bg="#1a212e",
-          },
-        },
-      }
-      vim.cmd.colorscheme "onedark"
+      vim.opt.background = "dark"
+      vim.cmd.colorscheme "catppuccin"
     end
   },
+
+
+  -- {
+  --   "navarasu/onedark.nvim",
+  --   priority = 1000,
+  --   config = function ()
+  --     require"onedark".setup{
+  --       style = "deep",
+  --       highlights = {
+  --         ["NormalFloat"] = {
+  --           bg="#1a212e",
+  --         },
+  --         ["FloatBorder"] = {
+  --           fg="#93a4c3",
+  --           bg="#1a212e",
+  --         },
+  --       },
+  --     }
+  --     vim.cmd.colorscheme "onedark"
+  --   end
+  -- },
 
   {
     "dstein64/vim-startuptime",
@@ -59,16 +86,12 @@ return {
   },
 
   {
-    "nvim-treesitter/nvim-treesitter",
-    config = function()
-      require'nvim-treesitter.configs'.setup {
-        ensure_installed = { "cpp", "bash", "python", "typescript", "javascript", "go", "markdown", "markdown_inline" },
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-      }
-    end
+    -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    build = ':TSUpdate',
   },
 
   { "szw/vim-maximizer", lazy = true, cmd = "MaximizerToggle" },
@@ -84,35 +107,33 @@ return {
 
   {
     'nvim-telescope/telescope.nvim',
-    dependencies = { "nvim-lua/plenary.nvim" },
     config = true,
     event = "VeryLazy",
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
+      },
+    }
   },
 
   'onsails/lspkind-nvim',
+
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    keys = {
-      { "<leader>nt", "<cmd>Neotree toggle<CR>", desc = "NeoTree" },
-    },
-    config = function ()
-      require"neo-tree".setup{}
-    end,
-    branch = "v3.x",
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
     dependencies = {
-      "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
     },
-    opts = {
-      source_selector = {
-        winbar = true,
-        statusline = false,
-      },
-    },
-
+    config = function()
+      require("nvim-tree").setup {}
+    end,
   },
-
 
   'L3MON4D3/LuaSnip',
   'hrsh7th/cmp-nvim-lsp-signature-help',
@@ -198,7 +219,12 @@ return {
 
   {
     'ray-x/go.nvim',
-    config = true,
+    opts = {
+      lsp_inlay_hints = {
+        enable = false,
+      },
+      diagnostic = false,
+    },
     ft = "go",
   },
 
@@ -233,9 +259,19 @@ return {
     event = "VeryLazy",
   },
 
-  "williamboman/mason-lspconfig.nvim",
-  "williamboman/mason.nvim",
-  'neovim/nvim-lspconfig',
+  -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth',
+
+  {
+    -- LSP Configuration & Plugins
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      { 'williamboman/mason.nvim', config = true },
+      'williamboman/mason-lspconfig.nvim',
+
+      'folke/neodev.nvim',
+    },
+  },
 
   {
     "jose-elias-alvarez/null-ls.nvim",
@@ -335,4 +371,44 @@ return {
   },
 
   "szykol/statusline.nvim",
+  -- {'neoclide/coc.nvim', branch = 'release'},
+  {
+    'altermo/ultimate-autopair.nvim',
+    event = {'InsertEnter','CmdlineEnter'},
+    branch = 'v0.6',
+    opts = {
+        --Config goes here
+    },
+  },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    config = function ()
+      require("noice").setup({
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        }
+      })
+    end,
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      -- "rcarriga/nvim-notify",
+      }
+  },
 }

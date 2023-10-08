@@ -5,7 +5,8 @@ local types = require('cmp.types')
 local mapping = require('cmp.config.mapping')
 local lspkind = require('lspkind')
 
-require("mason").setup()
+pcall(require('telescope').load_extension, 'fzf')
+
 require("mason-lspconfig").setup {
   ensure_installed = { "lua_ls", "rust_analyzer", "pyright", "gopls", "elixirls" },
 }
@@ -31,20 +32,15 @@ end, { silent = true })
 
 
 cmp.setup({
-    window = {
-        completion = cmp.config.window.bordered({scrollbar = false}),
-        documentation = cmp.config.window.bordered({scrollbar = false}),
-    },
     snippet = {
       expand = function(args)
         require('luasnip').lsp_expand(args.body)
       end,
     },
     mapping = {
-      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-      ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
       ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-      ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
       ['<C-n>'] = {
         i = mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Insert }),
         c = mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Insert }),
@@ -89,13 +85,6 @@ cmp.setup({
         { name = 'buffer', keyword_length = 2 }
       }
     }),
-    cmp.setup.cmdline(':', {
-      sources = cmp.config.sources({
-        { name = 'path', keyword_length = 2 }
-      }, {
-        { name = 'cmdline', keyword_length = 2 }
-      })
-  })
 })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -128,7 +117,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>sc', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
   vim.keymap.set('n', '<leader>sk', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   vim.keymap.set('n', '<leader>sj', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  vim.keymap.set('n', '<leader>q',  '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  vim.keymap.set('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   vim.keymap.set('n', '<leader>r',  '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
   vim.keymap.set('n', '<leader>iy',  function() vim.lsp.buf.inlay_hint(bufnr, true) end, opts)
   vim.keymap.set('n', '<leader>in',  function() vim.lsp.buf.inlay_hint(bufnr, false) end, opts)
@@ -209,14 +198,6 @@ require("clangd_extensions").setup({
     },
 })
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "single",
-})
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-  border = "single",
-})
-
 vim.diagnostic.config({
   virtual_text = false,
   signs = true,
@@ -226,7 +207,6 @@ vim.diagnostic.config({
   float = {
     focusable = true,
     style = "minimal",
-    border = "rounded",
     source = "always",
     header = "",
     prefix = "",
@@ -318,3 +298,5 @@ dap.configurations.rust = {
     runInTerminal = false,
   },
 }
+
+require('neodev').setup()
