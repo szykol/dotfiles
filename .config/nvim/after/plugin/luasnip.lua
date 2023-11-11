@@ -14,3 +14,12 @@ ls.add_snippets("go", {
     t({ "", "}" }),
   }),
 })
+
+ls.add_snippets("go", {
+  s("test", {
+    t({ "func Test(t *testing.T) {", "" }),
+    t("\t"),
+    i(1),
+    t({ "", "}" }),
+  }),
+})

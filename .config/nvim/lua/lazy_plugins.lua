@@ -18,23 +18,23 @@ return {
 --   end
 -- },
 --
-  -- {
-  --   "EdenEast/nightfox.nvim",
-  --   priority = 1000,
-  --   config = function ()
-  --     vim.cmd.colorscheme "nightfox"
-  --   end
-  -- },
-  --
-
   {
-    'catppuccin/nvim',
+    "EdenEast/nightfox.nvim",
     priority = 1000,
     config = function ()
-      vim.opt.background = "dark"
-      vim.cmd.colorscheme "catppuccin"
+      vim.cmd.colorscheme "nightfox"
     end
   },
+
+
+  -- {
+  --   'catppuccin/nvim',
+  --   priority = 1000,
+  --   config = function ()
+  --     vim.opt.background = "light"
+  --     vim.cmd.colorscheme "catppuccin"
+  --   end
+  -- },
 
 
   -- {
@@ -372,14 +372,14 @@ return {
 
   "szykol/statusline.nvim",
   -- {'neoclide/coc.nvim', branch = 'release'},
-  {
-    'altermo/ultimate-autopair.nvim',
-    event = {'InsertEnter','CmdlineEnter'},
-    branch = 'v0.6',
-    opts = {
-        --Config goes here
-    },
-  },
+  -- {
+  --   'altermo/ultimate-autopair.nvim',
+  --   event = {'InsertEnter','CmdlineEnter'},
+  --   branch = 'v0.6',
+  --   opts = {
+  --       --Config goes here
+  --   },
+  -- },
   {
     "folke/noice.nvim",
     event = "VeryLazy",
