@@ -1,5 +1,17 @@
 return {
-  -- "folke/which-key.nvim",
+  {
+  	"folke/which-key.nvim",
+  	event = "VeryLazy",
+  	init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+  	end,
+  	opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+  	}
+  },
 
   -- {
   --   "folke/tokyonight.nvim",
@@ -18,23 +30,37 @@ return {
 --   end
 -- },
 --
-  {
-    "EdenEast/nightfox.nvim",
-    priority = 1000,
-    config = function ()
-      vim.cmd.colorscheme "nightfox"
-    end
-  },
-
-
   -- {
-  --   'catppuccin/nvim',
+  --   "EdenEast/nightfox.nvim",
   --   priority = 1000,
   --   config = function ()
-  --     vim.opt.background = "light"
-  --     vim.cmd.colorscheme "catppuccin"
+  --     vim.cmd.colorscheme "nightfox"
   --   end
   -- },
+
+  -- {
+  --   "f-person/auto-dark-mode.nvim",
+  --   config = {
+  --     update_interval = 1000,
+  --     set_dark_mode = function()
+  --       vim.opt.background = "dark"
+  --       vim.cmd.colorscheme 'nightfox'
+  --     end,
+  --     set_light_mode = function()
+  --       vim.opt.background = "light"
+  --       vim.cmd.colorscheme 'nightfox'
+  --     end,
+  --   },
+  -- },
+
+  {
+    'catppuccin/nvim',
+    priority = 1000,
+    config = function ()
+      vim.opt.background = "light"
+      vim.cmd.colorscheme "catppuccin"
+    end
+  },
 
 
   -- {
@@ -107,7 +133,18 @@ return {
 
   {
     'nvim-telescope/telescope.nvim',
-    config = true,
+    opts = {
+      extensions = {
+          ["ui-select"] = {
+            -- pseudo code / specification for writing custom displays, like the one
+            -- for "codeactions"
+             specific_opts = {
+               -- for example to disable the custom builtin "codeactions" display do the following
+               codeactions = false,
+             }
+          }
+        }
+    },
     event = "VeryLazy",
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -207,7 +244,8 @@ return {
             runner = "pytest",
             dap = { justMyCode = false },
             python = function () return vim.fn.getcwd() .. "/.venv/bin/python" end,
-          })
+          }),
+          require('rustaceanvim.neotest'),
         }
       })
     end,
@@ -260,7 +298,7 @@ return {
   },
 
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  -- 'tpope/vim-sleuth',
 
   {
     -- LSP Configuration & Plugins
@@ -287,8 +325,8 @@ return {
           -- nls.builtins.formatting.black,
           -- nls.builtins.diagnostics.flake8,
           -- nls.builtins.diagnostics.ruff,
-          nls.builtins.formatting.gofumpt,
-          nls.builtins.diagnostics.golangci_lint,
+          -- nls.builtins.formatting.gofumpt,
+          -- nls.builtins.diagnostics.golangci_lint,
         },
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git", "go.sum"),
       })
@@ -370,7 +408,20 @@ return {
       event = "VeryLazy",
   },
 
-  "szykol/statusline.nvim",
+  {
+      "nvim-telescope/telescope-ui-select.nvim",
+      dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+      config = function ()
+        require("telescope").load_extension "ui-select"
+      end,
+      event = "VeryLazy",
+  },
+
+  -- "szykol/statusline.nvim",
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = {'kyazdani42/nvim-web-devicons'},
+  },
   -- {'neoclide/coc.nvim', branch = 'release'},
   -- {
   --   'altermo/ultimate-autopair.nvim',
@@ -410,5 +461,10 @@ return {
       --   If not available, we use `mini` as the fallback
       -- "rcarriga/nvim-notify",
       }
+  },
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^4', -- Recommended
+    ft = { 'rust' },
   },
 }

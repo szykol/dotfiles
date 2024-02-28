@@ -93,9 +93,9 @@ local nvim_lsp = require("lspconfig")
 local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-  if client.supports_method('textDocument/inlayHint') then
-    vim.lsp.inlay_hint(bufnr, true)
-  end
+  -- if client.supports_method('textDocument/inlayHint') then
+  --   vim.lsp.inlay_hint(bufnr, true)
+  -- end
 
   -- Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -123,7 +123,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>in',  function() vim.lsp.buf.inlay_hint(bufnr, false) end, opts)
 end
 
-local servers = { 'rust_analyzer', "clangd", "elixirls" }
+local servers = { "clangd", "elixirls", "elmls", "tsserver", "tailwindcss" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -133,6 +133,24 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
+
+vim.g.rustaceanvim = {
+  -- Plugin configuration
+  tools = {
+  },
+  -- LSP configuration
+  server = {
+    on_attach = on_attach,
+    settings = {
+      -- rust-analyzer language server configuration
+      ['rust-analyzer'] = {
+      },
+    },
+  },
+  -- DAP configuration
+  dap = {
+  },
+}
 
 require("clangd_extensions").setup({
     inlay_hints = {
@@ -246,6 +264,16 @@ nvim_lsp.pyright.setup {
     },
   },
 }
+
+-- nvim_lsp.ruff_lsp.setup {
+--   on_attach = on_attach,
+--   init_options = {
+--     settings = {
+--       interpreter = { '.venv/bin/python' }
+--     }
+--   }
+-- }
+
 
 require'lspconfig'.lua_ls.setup {
   on_attach = on_attach,

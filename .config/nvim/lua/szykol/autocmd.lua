@@ -39,15 +39,3 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt.shiftwidth = 2
   end
 })
-
-vim.api.nvim_create_autocmd("InsertLeavePre", {
-  callback = function ()
-    vim.lsp.inlay_hint(0, true)
-  end
-})
-
-vim.api.nvim_create_autocmd("InsertEnter", {
-  callback = function ()
-    vim.lsp.inlay_hint(0, false)
-  end
-})
